@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
+    "@mdi/font": "^3.8.95",
     "core-js": "^2.6.5",
     "material-design-icons-iconfont": "^5.0.1",
     "roboto-fontface": "*",
