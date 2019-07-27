@@ -19,6 +19,32 @@
     <v-content>
       <router-view/>
     </v-content>
+
+    <v-bottom-navigation app
+      :value="activeBtn"
+      grow
+      :color="color_base"
+    >
+      <v-btn>
+        <span>Inicio</span>
+        <v-icon>home</v-icon>
+      </v-btn>
+
+      <v-btn>
+        <span>Búsqueda</span>
+        <v-icon>search</v-icon>
+      </v-btn>
+
+      <v-btn>
+        <span>Notificaciones</span>
+        <v-icon>favorite</v-icon>
+      </v-btn>
+
+      <v-btn>
+        <span>Mensajería</span>
+        <v-icon>chat</v-icon>
+      </v-btn>
+    </v-bottom-navigation>
   </v-app>
 </template>
 
@@ -29,10 +55,10 @@ import {mapState} from 'vuex'
 export default {
   name: 'App',
   data: () => ({
-    //
+    activeBtn: 0,
   }),
   computed: {
-    ...mapState(['nombre_proyecto'])
+    ...mapState(['nombre_proyecto', 'color_base'])
   }
 };
 </script>
