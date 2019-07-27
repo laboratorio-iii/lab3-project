@@ -59,7 +59,7 @@ export default {
         }
     }),
     computed: {
-    ...mapState(['color_base'])
-  }
+        ...mapState(['color_base'])
+    }
 }
 </script>
