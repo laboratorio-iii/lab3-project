@@ -1,26 +1,31 @@
 <template>
     <v-content>
-        <v-container grid-list-xs>
+        <v-container grid-list-md>
             <v-layout
                 wrap
             >
                 <v-flex
-                v-for="card in cards"
-                :key="card.title"
-                v-bind="{ [`xs${card.flex}`]: true }"
+                v-for="post in posts"
+                :key="post.title"
+                v-bind="{ [`xs${post.flex}`]: true }"
                 >
                 <v-card>
                     <v-img
-                    :src="card.src"
+                    :src="post.img"
                     class="white--text"
-                    height="200px"
+                    height="150px"
                     gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                     >
                     <v-card-title
                         class="fill-height align-end"
-                        v-text="card.title"
+                        v-text="post.title"
                     ></v-card-title>
                     </v-img>
+
+                    <v-card-text>Precio: $
+                        <span v-text="post.price"></span><br>
+                        <span class="text--primary" v-text="post.descripcion"></span>
+                    </v-card-text>
 
                     <v-card-actions>
                     <v-spacer></v-spacer>
@@ -47,10 +52,19 @@
 <script>
 export default {
     data: () => ({
-      cards: [
-        { title: 'Pre-fab homes', src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg', flex: 12 },
-        { title: 'Favorite road trips', src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg', flex: 12 },
-        { title: 'Best airlines', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg', flex: 12 },
+      posts: [
+        { title: 'Pre-fab homes', img: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
+        descripcion: 'Lorem ipsum dolor sit amet consectetur adipiscing elit commodo, taciti vulputate at praesent eu aliquam pulvinar.',
+        price: 20, flex: 12 },
+        { title: 'Favorite road trips', img: 'https://cdn.vuetifyjs.com/images/cards/road.jpg',
+        descripcion: 'Lorem ipsum dolor sit amet consectetur, adipiscing elit conubia mi eu accumsan, aliquet nascetur pellentesque dictumst.',
+        price: 60, flex: 12 },
+        { title: 'Best airlines', img: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg',
+        descripcion: 'Lorem ipsum dolor sit amet consectetur adipiscing elit urna, euismod sagittis metus sapien facilisi tortor habitasse.',
+        price: 40, flex: 12 },
+        { title: 'Lorem ipsum dolor.', img: 'https://cdn.vuetifyjs.com/images/cards/docks.jpg',
+        descripcion: 'Lorem ipsum dolor sit amet consectetur adipiscing elit nec, aptent praesent donec per lacus fringilla varius.',
+        price: 30, flex: 12 },
       ],
     }),
 }

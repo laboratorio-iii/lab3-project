@@ -5,7 +5,7 @@
         <span>{{ nombre_proyecto }} </span>
         <span class="font-weight-light">Lab3</span>
       </v-toolbar-title>
-      <v-spacer></v-spacer>
+      <!-- <v-spacer></v-spacer> -->
       <!-- <v-btn
         text
         href="#"
