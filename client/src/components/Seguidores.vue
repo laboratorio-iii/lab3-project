@@ -3,7 +3,7 @@
         <v-list>
             <template v-for="(item, index) in items">
                 <v-divider v-if="!item.last" inset :key="index"></v-divider>
-                <v-list-item :key="item.title">
+                <v-list-item :key="item.title" @click="debug">
                     <v-list-item-icon>
                     <v-btn x-small class="font-weight-light">
                         <v-icon dark left>done</v-icon>Seguir
@@ -33,6 +33,11 @@ export default {
           { title: 'Ali Connors', avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg' },
           { title: 'Cindy Baker', avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg' },
         ],
-    })
+    }),
+    methods: {
+        debug() {
+            console.log(event.target)
+        }
+    } 
 }
 </script>

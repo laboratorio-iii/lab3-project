@@ -3,7 +3,7 @@
         <v-list>
             <template v-for="(item, index) in items">
                 <v-divider v-if="!item.last" inset :key="index"></v-divider>
-                <v-list-item :key="item.title">
+                <v-list-item :key="item.title" @click="debug">
                     <v-list-item-icon>
                     <v-btn x-small class="font-weight-light white--text" :color="color_base">
                         <v-icon left>done</v-icon>Seguido
@@ -39,5 +39,10 @@ export default {
     computed: {
         ...mapState(['color_base'])
     },
+    methods: {
+        debug() {
+            console.log(event.target)
+        }
+    } 
 }
 </script>

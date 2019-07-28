@@ -41,6 +41,7 @@ export default {
     data: () => ({
         items: [
           { title: 'Mi perfil', icon: 'account_circle' },
+          { title: 'Acceso', icon: 'lock' },
           { title: 'Mis reacciones', icon: 'favorite' },
           { title: 'Gestionar', icon: 'pan_tool' },
           { title: 'Salir', icon: 'power_settings_new' },

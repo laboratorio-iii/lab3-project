@@ -23,7 +23,7 @@ export default {
             {title: 'Inicio', icon: 'home', route: 'home'},
             {title: 'Búsqueda', icon: 'search', route: 'login'},
             {title: 'Notificaciones', icon: 'favorite', route: 'register'},
-            {title: 'Mensajería', icon: 'chat', route: 'profile'},
+            {title: 'Mensajería', icon: 'chat', route: 'chats'},
         ]
     }),
     computed: {

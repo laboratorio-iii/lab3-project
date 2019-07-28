@@ -28,7 +28,7 @@
                             <v-divider></v-divider>
                             <h6 class="gray--text">Se unió el 27/07/2019.</h6>
                             <v-divider></v-divider>
-                            <p class="font-weight-light">Barquisimeto, Venezuela</p>
+                            <p class="font-weight-light">Barquisimeto, Lara</p>
                             <v-btn x-small class="font-weight-light">
                                 <v-icon dark left>done</v-icon>Seguir
                             </v-btn>
@@ -85,7 +85,6 @@ export default {
         items: [
             'Publicaciones', 'Seguidores', 'Seguidos',
         ],
-        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
     }),
     computed: {
         ...mapState(['color_base'])
