@@ -47,11 +47,27 @@
                 </v-card>
                 </v-flex>
             </v-layout>
+
+            <v-btn
+                :color="color_base"
+                dark
+                large
+                fixed
+                bottom
+                right
+                fab
+                style="margin-bottom: 50px"
+                >
+                <v-icon>add</v-icon>
+            </v-btn>
+
         </v-container>
     </v-content>
 </template>
 
 <script>
+import {mapState} from 'vuex'
+
 export default {
     data: () => ({
       posts: [
@@ -68,18 +84,21 @@ export default {
         descripcion: 'Lorem ipsum dolor sit amet consectetur adipiscing elit nec, aptent praesent donec per lacus fringilla varius.',
         price: 30, liked: false, xsflex: 12, mdflex: 6, color: '' },
       ],
+      likedColor: 'red',
     }),
     methods: {
         like(i) {
             this.posts[i].liked ? [this.posts[i].color = 'none', this.posts[i].liked = false] :
-             [this.posts[i].color = 'primary', this.posts[i].liked = true]
+             [this.posts[i].color = this.likedColor, this.posts[i].liked = true]
         }
     },
     created() {
         this.posts.forEach(element => {
-            element.liked ? element.color = 'primary' : element.color = 'none'
+            element.liked ? element.color = this.likedColor : element.color = 'none'
         });
-    
-  }
+    },
+  computed: {
+        ...mapState(['color_base'])
+    }
 }
 </script>

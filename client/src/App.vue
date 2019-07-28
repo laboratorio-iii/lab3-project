@@ -26,6 +26,7 @@
     </v-content>
 
     <navBtn></navBtn>
+    
   </v-app>
 </template>
 
