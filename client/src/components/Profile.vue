@@ -72,11 +72,13 @@
 import {mapState} from 'vuex'
 import Publicaciones from './Publicaciones'
 import Seguidores from './Seguidores'
+import Seguidos from './Seguidos'
 
 export default {
     components: {
         Publicaciones,
-        Seguidores
+        Seguidores,
+        Seguidos,
     },
     data: () => ({
         tab: null,
