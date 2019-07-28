@@ -48,14 +48,14 @@ export default {
     }),
     computed: {
         ...mapState(['color_base']),
-            drawerValue: {
-                get () {
-                    return this.$store.state.drawer
-                },
-                set (val) {
-                    this.setDrawer(val)
-                }
+        drawerValue: {
+            get () {
+                return this.$store.state.drawer
             },
+            set (val) {
+                this.setDrawer(val)
+            }
+        },
     },
     methods: {
         ...mapMutations(['setDrawer', 'toggleDrawer']),

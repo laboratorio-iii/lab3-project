@@ -6,10 +6,6 @@
         <span class="font-weight-light">Lab3</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <!-- <v-btn
-        text
-        @click="drawer =! drawer"
-      > -->
       <v-btn
         text
         @click.stop="onDrawer"
@@ -29,35 +25,12 @@
       <router-view/>
     </v-content>
 
-    <v-bottom-navigation app
-      :value="activeBtn"
-      grow
-      :color="color_base"
-    >
-      <v-btn>
-        <span>Inicio</span>
-        <v-icon>home</v-icon>
-      </v-btn>
-
-      <v-btn>
-        <span>Búsqueda</span>
-        <v-icon>search</v-icon>
-      </v-btn>
-
-      <v-btn>
-        <span>Notificaciones</span>
-        <v-icon>favorite</v-icon>
-      </v-btn>
-
-      <v-btn>
-        <span>Mensajería</span>
-        <v-icon>chat</v-icon>
-      </v-btn>
-    </v-bottom-navigation>
+    <navBtn></navBtn>
   </v-app>
 </template>
 
 <script>
+import navBtn from './components/core/NavBtn'
 import navDrawer from './components/core/NavDrawer'
 
 import {mapState, mapMutations} from 'vuex'
@@ -65,10 +38,11 @@ import {mapState, mapMutations} from 'vuex'
 export default {
   name: 'App',
   components: {
+    navBtn,
     navDrawer,
   },
   data: () => ({
-    activeBtn: 0,
+    //
   }),
   computed: {
     ...mapState(['nombre_proyecto', 'color_base'])

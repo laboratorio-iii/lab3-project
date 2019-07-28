@@ -9,11 +9,13 @@ export default new Vuex.Store({
   state: {
     nombre_proyecto: 'Proyecto',
     color_base: 'amber darken-4',
+    activeBtn: null,
     drawer: null,
   },
   mutations: {
     setDrawer: set('drawer'),
-    toggleDrawer: toggle('drawer')
+    toggleDrawer: toggle('drawer'),
+    setActiveBtn: set('activeBtn'),
   },
   actions: {
 

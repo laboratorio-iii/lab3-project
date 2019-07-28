@@ -53,7 +53,6 @@
 
 <script>
 export default {
-    // <td :class="{tareaRealizada: tarea.hecho}">
     data: () => ({
       posts: [
         { title: 'Pre-fab homes', img: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
