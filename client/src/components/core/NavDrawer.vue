@@ -17,18 +17,42 @@
             <v-divider></v-divider>
 
             <v-list dense>
-                <v-list-item
-                v-for="item in items"
-                :key="item.title"
-                >
-                <v-list-item-icon>
-                    <v-icon v-text="item.icon"></v-icon>
-                </v-list-item-icon>
+                <template v-for="(item, index) in items">
+                    <v-list-item v-if="!item.admin" :key="index"
+                        :to="{ name: item.route }"
+                        color="grey darken-4">
+                        <v-list-item-icon>
+                            <v-icon v-text="item.icon"></v-icon>
+                        </v-list-item-icon>
 
-                <v-list-item-content>
-                    <v-list-item-title v-text="item.title"></v-list-item-title>
-                </v-list-item-content>
-                </v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-title v-text="item.title"></v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                   
+                    <v-list-group v-else :key="index"
+                        :prepend-icon="item.icon"
+                        color="grey darken-4"
+                        >
+                        <template v-slot:activator>
+                        <v-list-item-title v-text="item.title"></v-list-item-title>
+                        </template>
+
+                        <v-list-item
+                            v-for="(admin, i) in admins"
+                            :key="i"
+                            :to="{ name: admin[2] }"
+                            color="grey darken-4"
+                        >
+                            <v-list-item-title v-text="admin[0]"></v-list-item-title>
+                            <v-list-item-icon>
+                            <v-icon v-text="admin[1]"></v-icon>
+                            </v-list-item-icon>
+                        </v-list-item>
+        
+                    </v-list-group>
+                    
+                </template>
             </v-list>
         </v-navigation-drawer>
     </div>
@@ -40,11 +64,16 @@ import {mapState, mapMutations} from 'vuex'
 export default {
     data: () => ({
         items: [
-          { title: 'Mi perfil', icon: 'account_circle' },
-          { title: 'Acceso', icon: 'lock' },
-          { title: 'Mis reacciones', icon: 'favorite' },
-          { title: 'Gestionar', icon: 'pan_tool' },
-          { title: 'Salir', icon: 'power_settings_new' },
+          { title: 'Mi perfil', icon: 'account_circle', route: 'profile', admin: false },
+          { title: 'Acceso', icon: 'lock', route: 'settings', admin: false },
+          { title: 'Mis reacciones', icon: 'favorite', route: 'likes' , admin: false },
+          { title: 'Gestionar', icon: 'pan_tool', route: 'profile', admin: true },
+          { title: 'Salir', icon: 'power_settings_new', route: 'login', admin: false },
+        ],
+        admins: [
+            ['Usuarios', 'people_outline', 'users'],
+            ['Publicaciones', 'photo_library', 'publications'],
+            ['Categorias', 'spellcheck', 'categories'],
         ],
     }),
     computed: {
@@ -60,6 +89,9 @@ export default {
     },
     methods: {
         ...mapMutations(['setDrawer', 'toggleDrawer']),
+        debug() {
+            console.log(event.target)
+        }
     },
 }
 </script>

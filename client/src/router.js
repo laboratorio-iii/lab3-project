@@ -37,9 +37,34 @@ export default new Router({
       component: () => import('./views/Profile.vue')
     },
     {
+      path: '/settings',
+      name: 'settings',
+      component: () => import('./views/Settings.vue')
+    },
+    {
+      path: '/users',
+      name: 'users',
+      component: () => import('./views/Users.vue')
+    },
+    {
+      path: '/publications',
+      name: 'publications',
+      component: () => import('./views/Publications.vue')
+    },
+    {
+      path: '/categories',
+      name: 'categories',
+      component: () => import('./views/Categories.vue')
+    },
+    {
       path: '/chats',
       name: 'chats',
       component: () => import('./views/Chat.vue')
+    },
+    {
+      path: '/likes',
+      name: 'likes',
+      component: () => import('./views/Reacciones.vue')
     },
   ]
 })

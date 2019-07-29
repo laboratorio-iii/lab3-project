@@ -5,7 +5,6 @@
 </template>
 
 <script>
-
 import Register from '../components/Register'
 
 export default {
