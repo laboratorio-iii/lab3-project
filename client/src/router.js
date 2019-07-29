@@ -14,6 +14,16 @@ export default new Router({
       component: Home
     },
     {
+      path: '/notifications',
+      name: 'notifications',
+      component: () => import('./views/Notifications.vue')
+    },
+    {
+      path: '/chats',
+      name: 'chats',
+      component: () => import('./views/Chat.vue')
+    },
+    {
       path: '/about',
       name: 'about',
       // route level code-splitting
@@ -55,11 +65,6 @@ export default new Router({
       path: '/categories',
       name: 'categories',
       component: () => import('./views/Categories.vue')
-    },
-    {
-      path: '/chats',
-      name: 'chats',
-      component: () => import('./views/Chat.vue')
     },
     {
       path: '/likes',

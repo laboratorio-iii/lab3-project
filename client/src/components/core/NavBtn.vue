@@ -22,7 +22,7 @@ export default {
         btns: [
             {title: 'Inicio', icon: 'home', route: 'home'},
             {title: 'Búsqueda', icon: 'search', route: 'login'},
-            {title: 'Notificaciones', icon: 'favorite', route: 'register'},
+            {title: 'Notificaciones', icon: 'favorite', route: 'notifications'},
             {title: 'Mensajería', icon: 'chat', route: 'chats'},
         ]
     }),
