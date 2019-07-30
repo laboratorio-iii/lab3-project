@@ -67,6 +67,11 @@ export default new Router({
       component: () => import('./views/Categories.vue')
     },
     {
+      path: '/publication/create',
+      name: 'publication-create',
+      component: () => import('./views/NewPublication.vue')
+    },
+    {
       path: '/likes',
       name: 'likes',
       component: () => import('./views/Reacciones.vue')

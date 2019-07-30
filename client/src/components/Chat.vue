@@ -13,6 +13,7 @@
                     v-else-if="item.divider"
                     :key="index"
                     :inset="item.inset"
+                    color="orange"
                     ></v-divider>
 
                     <v-list-item
@@ -31,6 +32,61 @@
                     </v-list-item>
                 </template>
             </v-list>
+
+            <v-btn
+                :color="color_base"
+                dark
+                large
+                fixed
+                bottom
+                right
+                fab
+                style="margin-bottom: 50px"
+                @click="msg_dialog = true"
+                >
+                <v-icon>fa fa-paper-plane</v-icon>
+            </v-btn>
+
+
+            <template id="msg-dialog">
+                <v-layout justify-center>
+                    <v-dialog v-model="msg_dialog" max-width="600px">
+                    
+                    <v-card>
+                        <v-card-title>
+                        <span class="headline">Mensaje directo</span>
+                        </v-card-title>
+                        <v-card-text>
+                        <v-container grid-list-md>
+                            <v-layout wrap>
+                            <v-flex xs12>
+                                <v-text-field :color="color_base" label="Destinario*" required></v-text-field>
+                            </v-flex>
+                            <v-flex xs12>
+                                <v-text-field :color="color_base" label="Título del mensaje*" required></v-text-field>
+                            </v-flex>
+                            <v-flex xs12>
+                                <v-textarea
+                                outlined
+                                name="mgs-body"
+                                label="Cuerpo del mensaje."
+                                value=""
+                                :color="color_base"
+                            ></v-textarea>
+                            </v-flex>
+
+                            </v-layout>
+                        </v-container>
+                        </v-card-text>
+                        <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn :color="color_base" text @click="msg_dialog = false">Salir</v-btn>
+                        <v-btn :color="color_base" text @click="msg_dialog = false">Enviar</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                    </v-dialog>
+                </v-layout>
+            </template>
         </v-container>
     </v-content>
 </template>
@@ -41,7 +97,7 @@ import {mapState} from 'vuex'
 export default {
     data: () => ({
         items: [
-        { header: 'Today' },
+        { header: 'Mensajes' },
         {
           avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
           title: 'Brunch this weekend?',
@@ -72,6 +128,7 @@ export default {
           subtitle: "<span class='text--primary'>Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.",
         },
       ],
+      msg_dialog: false,
     }),
     computed: {
         ...mapState(['color_base'])

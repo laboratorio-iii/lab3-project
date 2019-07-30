@@ -32,7 +32,7 @@
                             <v-btn x-small class="font-weight-light">
                                 <v-icon dark left>done</v-icon>Seguir
                             </v-btn>
-                            <v-btn fab dark x-small color="gray" class="mx-5    ">
+                            <v-btn fab dark x-small color="gray" class="mx-5" @click="dialog = true">
                                     <v-icon dark>edit</v-icon>
                             </v-btn>
                         </v-card-text>
@@ -64,6 +64,86 @@
                     
                 </v-tab-item>
             </v-tabs-items>
+            <template id="dialog">
+                <v-layout justify-center>
+                    <v-dialog v-model="dialog" max-width="600px">
+                    
+                    <v-card>
+                        <v-card-title>
+                        <span class="headline">Datos personales</span>
+                        </v-card-title>
+                        <v-card-text>
+                        <v-container grid-list-md>
+                            <v-form>
+                                <v-layout row wrap>
+                                    <v-flex xs6>
+                                        <v-text-field :color="color_base"
+                                            name="nombre"
+                                            label="Nombre"
+                                            id="nombre"
+                                        ></v-text-field>
+                                    </v-flex>
+
+                                    <v-flex xs6>
+                                        <v-text-field :color="color_base"
+                                            name="apellido"
+                                            label="Apellidos"
+                                            id="apellido"
+                                        ></v-text-field>
+                                    </v-flex>
+
+                                    <v-flex>
+                                        <v-menu
+                                            v-model="menu"
+                                            :close-on-content-click="false"
+                                            :nudge-right="40"
+                                            transition="scale-transition"
+                                            offset-y
+                                            full-width
+                                            min-width="290px"
+                                        >
+                                            <template v-slot:activator="{ on }">
+                                                <v-text-field :color="color_base"
+                                                    v-model="date"
+                                                    label="Fecha de nacimiento"
+                                                    prepend-icon="event"
+                                                    readonly
+                                                    v-on="on"
+                                                ></v-text-field>
+                                            </template>
+                                            <v-date-picker :color="color_base" v-model="date" @input="menu = false"></v-date-picker>
+                                        </v-menu>
+                                    </v-flex>
+
+                                    <v-flex xs12 sm6 d-flex>
+                                        <v-select
+                                        :items="estados"
+                                        label="Estado"
+                                        :color="color_base"
+                                        ></v-select>
+                                    </v-flex>
+
+                                    <v-flex xs12 sm6 d-flex>
+                                        <v-select
+                                        :items="ciudades"
+                                        label="Ciudad"
+                                        :color="color_base"
+                                        ></v-select>
+                                    </v-flex>
+                                    
+                                </v-layout>
+                            </v-form>
+                        </v-container>
+                        </v-card-text>
+                        <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn :color="color_base" text @click="dialog = false">Salir</v-btn>
+                        <v-btn :color="color_base" text @click="dialog = false">Guardar datos</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                    </v-dialog>
+                </v-layout>
+            </template>
         </v-container>
     </v-content>
 </template>
@@ -82,9 +162,19 @@ export default {
     },
     data: () => ({
         tab: null,
+        dialog: false,
+        show: false,
+        date: new Date().toISOString().substr(0, 10),
+        menu: false,
+        rules: {
+            required: value => !!value || 'Requerido',
+            min: v => v.length >= 8 || 'Mínimo 8 caracteres',
+        },
         items: [
             'Publicaciones', 'Seguidores', 'Seguidos',
         ],
+        estados: ['Lara', 'Zulia'],
+        ciudades: ['Barquisimeto', 'Maracaibo'],
     }),
     computed: {
         ...mapState(['color_base'])

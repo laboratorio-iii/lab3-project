@@ -32,7 +32,7 @@
             <v-divider></v-divider>
 
             <v-list subheader>
-                <v-subheader>Notificaciones</v-subheader>
+                <v-subheader>Más notificaciones</v-subheader>
 
                 <v-list-item
                     v-for="item in items2"
@@ -45,7 +45,12 @@
 
                     <v-list-item-content>
                     <v-list-item-title v-text="item.title"></v-list-item-title>
+                    <v-list-item-subtitle v-text="item.subtitle"></v-list-item-subtitle>
                     </v-list-item-content>
+
+                    <v-list-item-icon>
+                    <v-icon :color="item.active ? color_base : 'grey'" v-text="item.icon"></v-icon>
+                    </v-list-item-icon>
                 </v-list-item>
             </v-list>
             </v-card>
@@ -68,15 +73,26 @@ export default {
             subtitle: 'te comenzó a seguir', avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg' 
         },
         { 
-            title: 'Cindy Baker', icon: 'favorite',
+            active: true, title: 'Cindy Baker', icon: 'favorite',
             subtitle: 'reaccionó tu publicación', avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg' 
         },
         { 
-            title: 'Ali Connors', icon: 'done',
-            subtitle: 'te comenzó a seguir', avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg' },
+            active: true, title: 'Ali Connors', icon: 'done',
+            subtitle: 'te comenzó a seguir', avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg' 
+        },
       ],
       items2: [
-        { title: 'Travis Howard', avatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg' },
+        { 
+            title: 'Travis Howard', icon: 'favorite', 
+            subtitle: 'reaccionó tu publicación', avatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg' },
+        { 
+            title: 'Ali Connors', icon: 'done',
+            subtitle: 'te comenzó a seguir', avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg' 
+        },
+        { 
+            title: 'Cindy Baker', icon: 'favorite',
+            subtitle: 'reaccionó tu publicación', avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg' 
+        },
       ],
     }),
     computed: {

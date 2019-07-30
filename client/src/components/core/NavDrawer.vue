@@ -64,6 +64,7 @@ import {mapState, mapMutations} from 'vuex'
 export default {
     data: () => ({
         items: [
+          { title: 'Nueva publicación', icon: 'add_circle', route: 'publication-create', admin: false },
           { title: 'Mi perfil', icon: 'account_circle', route: 'profile', admin: false },
           { title: 'Acceso', icon: 'lock', route: 'settings', admin: false },
           { title: 'Mis reacciones', icon: 'favorite', route: 'likes' , admin: false },
