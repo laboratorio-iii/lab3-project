@@ -14,6 +14,11 @@ export default new Router({
       component: Home
     },
     {
+      path: '/search',
+      name: 'search',
+      component: () => import('./views/Search.vue')
+    },
+    {
       path: '/notifications',
       name: 'notifications',
       component: () => import('./views/Notifications.vue')

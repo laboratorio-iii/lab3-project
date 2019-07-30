@@ -21,7 +21,7 @@ export default {
     data: () => ({
         btns: [
             {title: 'Inicio', icon: 'home', route: 'home'},
-            {title: 'Búsqueda', icon: 'search', route: 'login'},
+            {title: 'Búsqueda', icon: 'search', route: 'search'},
             {title: 'Notificaciones', icon: 'favorite', route: 'notifications'},
             {title: 'Mensajería', icon: 'chat', route: 'chats'},
         ]
