@@ -68,7 +68,7 @@ export default {
           { title: 'Mi perfil', icon: 'account_circle', route: 'profile', admin: false },
           { title: 'Acceso', icon: 'lock', route: 'settings', admin: false },
           { title: 'Mis reacciones', icon: 'favorite', route: 'likes' , admin: false },
-          { title: 'Gestionar', icon: 'pan_tool', route: 'profile', admin: true },
+          { title: 'Gestionar', icon: 'pan_tool', route: '', admin: true },
           { title: 'Salir', icon: 'power_settings_new', route: 'login', admin: false },
         ],
         admins: [
