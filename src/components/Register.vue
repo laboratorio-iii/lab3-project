@@ -9,11 +9,11 @@
                         </v-img>
 
                         <v-card-text>
-                            <v-form>
+                            <v-form @submit="addUser">
                                 <v-layout row wrap>
                                     <v-flex xs6>
                                         <v-text-field :color="color_base"
-                                            name="nombre"
+                                            
                                             label="Nombre"
                                             id="nombre"
                                             v-model="name"
@@ -22,7 +22,7 @@
 
                                     <v-flex xs6>
                                         <v-text-field :color="color_base"
-                                            name="apellido"
+                                            
                                             label="Apellidos"
                                             id="apellido"
                                             v-model="lastname"
@@ -54,7 +54,7 @@
 
                                     <v-flex>
                                         <v-text-field :color="color_base"
-                                            name="email"
+                                            
                                             label="Correo electrónico"
                                             id="email"
                                             v-model="username"
@@ -66,7 +66,7 @@
                                             :append-icon="show ? 'visibility' : 'visibility_off'"
                                             :rules="[rules.required]"
                                             :type="show ? 'text' : 'password'"
-                                            name="password"
+                                            
                                             label="Contraseña"
                                             @click:append="show = !show"
                                             id="rpass"
@@ -78,15 +78,14 @@
                                             :append-icon="show ? 'visibility' : 'visibility_off'"
                                             :rules="[rules.required]"
                                             :type="show ? 'text' : 'password'"
-                                            name="rpassword"
+                                            
                                             label="Repita su contraseña"
                                             @click:append="show = !show"
                                         ></v-text-field>
                                     </v-flex>
                                 </v-layout>
                                 
-                                <v-btn type="submit" block class="ma-a" outlined :color="color_base"
-                                @click="addUser">
+                                <v-btn type="submit" block class="ma-a" outlined :color="color_base">
                                     <v-icon left>open_in_new</v-icon>Crear cuenta
                                 </v-btn>
                             </v-form>
@@ -124,7 +123,8 @@ export default {
     ...mapState(['color_base'])
     },
     methods: {
-        async addUser () {
+        async addUser (e) {
+            e.preventDefault()
             await UserService.addUser({
                 username: this.username,
                 password: this.password
@@ -134,7 +134,7 @@ export default {
             //     `Your post has been added!`,
             //     'success'
             // )
-            // this.$router.push({ name: 'login' })
+            this.$router.push({ name: 'login' })
         }
     }
 }
