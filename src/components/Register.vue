@@ -16,6 +16,7 @@
                                             name="nombre"
                                             label="Nombre"
                                             id="nombre"
+                                            v-model="name"
                                         ></v-text-field>
                                     </v-flex>
 
@@ -24,6 +25,7 @@
                                             name="apellido"
                                             label="Apellidos"
                                             id="apellido"
+                                            v-model="lastname"
                                         ></v-text-field>
                                     </v-flex>
 
@@ -55,6 +57,7 @@
                                             name="email"
                                             label="Correo electrónico"
                                             id="email"
+                                            v-model="username"
                                         ></v-text-field>
                                     </v-flex>
 
@@ -67,6 +70,7 @@
                                             label="Contraseña"
                                             @click:append="show = !show"
                                             id="rpass"
+                                            v-model="password"
                                         ></v-text-field>
                                     </v-flex>
                                     <v-flex>
@@ -81,7 +85,8 @@
                                     </v-flex>
                                 </v-layout>
                                 
-                                <v-btn type="submit" block class="ma-a" outlined :color="color_base">
+                                <v-btn type="submit" block class="ma-a" outlined :color="color_base"
+                                @click="addUser">
                                     <v-icon left>open_in_new</v-icon>Crear cuenta
                                 </v-btn>
                             </v-form>
@@ -99,11 +104,16 @@
 
 <script>
 import {mapState} from 'vuex'
+import UserService from '@/services/UserService'
 
 export default {
     data: () => ({
         show: false,
+        name: '',
+        lastname: '',
         date: new Date().toISOString().substr(0, 10),
+        username: '',
+        password: '',
         menu: false,
         rules: {
             required: value => !!value || 'Requerido',
@@ -112,6 +122,20 @@ export default {
     }),
     computed: {
     ...mapState(['color_base'])
-  }
+    },
+    methods: {
+        async addUser () {
+            await UserService.addUser({
+                username: this.username,
+                password: this.password
+            })
+            // this.$swal(
+            //     'Great!',
+            //     `Your post has been added!`,
+            //     'success'
+            // )
+            // this.$router.push({ name: 'login' })
+        }
+    }
 }
 </script>
