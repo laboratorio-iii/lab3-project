@@ -11,11 +11,13 @@ export default new Vuex.Store({
     color_base: 'amber darken-4',
     activeBtn: null,
     drawer: null,
+    user: {}
   },
   mutations: {
     setDrawer: set('drawer'),
     toggleDrawer: toggle('drawer'),
     setActiveBtn: set('activeBtn'),
+    setUser: set('user')
   },
   actions: {
 

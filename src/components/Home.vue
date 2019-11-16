@@ -11,7 +11,7 @@
                 >
                 <v-card>
                     <v-img
-                    :src="post.img"
+                    :src="post.image"
                     class="white--text"
                     height="150px"
                     gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
@@ -24,15 +24,14 @@
 
                     <v-card-text>Precio: $
                         <span v-text="post.price"></span><br>
-                        <span class="text--primary" v-text="post.descripcion"></span>
+                        <span class="text--primary" v-text="post.description"></span>
                     </v-card-text>
 
                     <v-card-actions>
                     <v-spacer></v-spacer>
 
-                    <v-btn icon
-                    :color="post.color"
-                    @click="like(index)">
+                    <v-btn icon :color="post.color"
+                    @click="like(post._id)">
                         <v-icon>favorite</v-icon>
                     </v-btn>
 
@@ -169,23 +168,12 @@
 
 <script>
 import {mapState} from 'vuex'
+import PostService from '@/services/PostService'
+import LikeService from '@/services/LikeService'
 
 export default {
     data: () => ({
-      posts: [
-        { title: 'Pre-fab homes', img: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
-        descripcion: 'Lorem ipsum dolor sit amet consectetur adipiscing elit commodo, taciti vulputate at praesent eu aliquam pulvinar.',
-        price: 20, liked: true, xsflex: 12, mdflex: 6, color: '' },
-        { title: 'Favorite road trips', img: 'https://cdn.vuetifyjs.com/images/cards/road.jpg',
-        descripcion: 'Lorem ipsum dolor sit amet consectetur, adipiscing elit conubia mi eu accumsan, aliquet nascetur pellentesque dictumst.',
-        price: 60, liked: false, xsflex: 12, mdflex: 6, color: '' },
-        { title: 'Best airlines', img: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg',
-        descripcion: 'Lorem ipsum dolor sit amet consectetur adipiscing elit urna, euismod sagittis metus sapien facilisi tortor habitasse.',
-        price: 40, liked: false, xsflex: 12, mdflex: 6, color: '' },
-        { title: 'Lorem ipsum dolor.', img: 'https://cdn.vuetifyjs.com/images/cards/docks.jpg',
-        descripcion: 'Lorem ipsum dolor sit amet consectetur adipiscing elit nec, aptent praesent donec per lacus fringilla varius.',
-        price: 30, liked: false, xsflex: 12, mdflex: 6, color: '' },
-      ],
+      posts: [],
       comments: [
         { header: 'Comentarios' },
         {
@@ -210,20 +198,26 @@ export default {
       comments_dialog: false,
       likedColor: 'red',
     }),
+    mounted () {
+        this.getPosts()
+    },
     methods: {
         debug() {
             console.log(event.target)
         },
-        like(i) {
-            this.posts[i].liked ? [this.posts[i].color = 'none', this.posts[i].liked = false] :
-             [this.posts[i].color = this.likedColor, this.posts[i].liked = true]
-        }
+        async like(i) {
+            const response = await LikeService.like(i)
+            console.log(response.data.result)
+        },
+        async getPosts () {
+            const response = await PostService.fetchPosts()
+            this.posts = response
+            console.log(this.posts)
+        },
     },
-    created() {
-        this.posts.forEach(element => {
-            element.liked ? element.color = this.likedColor : element.color = 'none'
-        });
-    },
+    // created() {
+
+    // },
   computed: {
         ...mapState(['color_base'])
     }
