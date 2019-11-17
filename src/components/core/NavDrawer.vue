@@ -53,6 +53,17 @@
                     </v-list-group>
                     
                 </template>
+
+                <v-list-item @click="logout"
+                    color="grey darken-4">
+                    <v-list-item-icon>
+                        <v-icon>power_settings_new</v-icon>
+                    </v-list-item-icon>
+
+                    <v-list-item-content>
+                        <v-list-item-title>Salir</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
             </v-list>
         </v-navigation-drawer>
     </div>
@@ -69,7 +80,7 @@ export default {
           { title: 'Acceso', icon: 'lock', route: 'settings', admin: false },
           { title: 'Mis reacciones', icon: 'favorite', route: 'likes' , admin: false },
           { title: 'Gestionar', icon: 'pan_tool', route: '', admin: true },
-          { title: 'Salir', icon: 'power_settings_new', route: 'login', admin: false },
+        //   { title: 'Salir', icon: 'power_settings_new', route: 'login', admin: false },
         ],
         admins: [
             ['Usuarios', 'people_outline', 'users'],
@@ -89,9 +100,14 @@ export default {
         },
     },
     methods: {
-        ...mapMutations(['setDrawer', 'toggleDrawer']),
+        ...mapMutations(['setDrawer', 'toggleDrawer', 'setUser']),
         debug() {
             console.log(event.target)
+        },
+        logout() {
+            window.localStorage.removeItem('_token')
+            this.setUser({})
+            this.$router.push({ name: 'login' })
         }
     },
 }

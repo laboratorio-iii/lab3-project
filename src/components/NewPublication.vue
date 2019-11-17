@@ -9,13 +9,14 @@
                         </v-img>
 
                         <v-card-text>
-                            <v-form>
+                            <v-form @submit="addPost">
                                 <v-layout row wrap>
                                     <v-flex xs12>
                                         <v-text-field :color="color_base"
-                                            name="titulo"
+                                            
                                             label="Titulo de la publicación"
-                                            id="precio"
+                                            id="titulo"
+                                            v-model="title"
                                         ></v-text-field>
                                     </v-flex>
 
@@ -31,18 +32,20 @@
                                     <v-flex xs12>
                                         <v-textarea
                                             outlined
-                                            name="description"
+                                            
                                             label="Descripción de la publicación."
                                             value=""
                                             :color="color_base"
+                                            v-model="description"
                                         ></v-textarea>
                                     </v-flex>
                                         
                                     <v-flex xs8>
                                         <v-text-field :color="color_base"
-                                            name="precio"
+                                            
                                             label="Precio $$$"
                                             id="precio"
+                                            v-model="price"
                                         ></v-text-field>
                                     </v-flex>
 
@@ -63,10 +66,35 @@
 
 <script>
 import {mapState} from 'vuex'
+import PostService from '@/services/PostService'
 
 export default {
+    data: () => ({
+        title: '',
+        description: '',
+        price: ''
+    }),
     computed: {
-        ...mapState(['color_base'])
+        ...mapState(['color_base', 'user'])
     },
+    methods: {
+        async addPost (e) {
+            e.preventDefault()
+            await PostService.addPost({
+                user: this.$store.state.user,
+                title: this.title,
+                description: this.description,
+                category: 'Sin categoria',
+                image: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
+                price: this.price
+            })
+            this.$swal(
+                'Great!',
+                `Your post has been added!`,
+                'success'
+            )
+            this.$router.push({ name: 'home' })
+        }
+    }
 }
 </script>

@@ -9,19 +9,21 @@
                         </v-img>
 
                         <v-card-text>
-                            <v-form>
+                            <v-form @submit="login">
                                 <v-text-field :color="color_base"
-                                    name="email"
+                                    
                                     label="Correo electrónico"
                                     id="email"
+                                    v-model="username"
                                 ></v-text-field>
                                 <v-text-field :color="color_base"
                                     :append-icon="show ? 'visibility' : 'visibility_off'"
                                     :rules="[rules.required]"
                                     :type="show ? 'text' : 'password'"
-                                    name="password"
+                                    
                                     label="Contraseña"
                                     @click:append="show = !show"
+                                    v-model="password"
                                 ></v-text-field>
                                 <v-btn type="submit" block class="ma-a" outlined :color="color_base">
                                     <v-icon left>open_in_new</v-icon>Iniciar sesión
@@ -46,20 +48,38 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import {mapState, mapMutations} from 'vuex'
+import AuthService from '@/services/AuthService'
 
 export default {
     data: () => ({
         show: false,
-        email: 'admin',
-        password: 'admin',
+        username: '',
+        password: '',
         rules: {
             required: value => !!value || 'Requerido',
             min: v => v.length >= 8 || 'Mínimo 8 caracteres',
         }
     }),
     computed: {
-        ...mapState(['color_base'])
+        ...mapState(['color_base', 'user']),
+    }, 
+    methods: {
+        ...mapMutations(['setUser']),
+        async login(e) {
+            e.preventDefault()
+            const response = await AuthService.login({
+                username: this.username,
+                password: this.password
+            })
+            if(response.data.success) {
+                window.localStorage.setItem('_token', response.data.token)
+                this.setUser(response.data.user)
+                this.$router.push({ name: 'profile' })
+                console.log('Usuario: ', this.$store.state.user)
+            }
+            this.$router.push({ name: 'login' })
+        }
     }
 }
 </script>
