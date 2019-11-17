@@ -44,6 +44,66 @@
                     </v-btn>
                     </v-card-actions>
                 </v-card>
+                <template id="comments-dialog">
+                    <v-layout justify-center>
+                        <v-dialog v-model="comments_dialog" max-width="600px">
+                        
+                        <v-card>
+                            <v-card-text>
+                            <v-container grid-list-md>
+                                <v-layout wrap>
+                                    <v-list three-line>
+                                        <template v-for="(comment, index) in comments">
+                                            <v-subheader
+                                            v-if="comment.header"
+                                            :key="comment.header"
+                                            v-text="comment.header"
+                                            ></v-subheader>
+
+                                            <v-divider
+                                            v-else-if="comment.divider"
+                                            :key="index"
+                                            :inset="comment.inset"
+                                            color="orange"
+                                            ></v-divider>
+
+                                            <v-list-item
+                                            v-else
+                                            :key="comment.title"
+                                            @click="debug"
+                                            >
+                                            <v-list-item-avatar>
+                                                <v-img :src="comment.avatar"></v-img>
+                                            </v-list-item-avatar>
+
+                                            <v-list-item-content>
+                                                <v-list-item-title v-html="comment.user"></v-list-item-title>
+                                                <v-list-item-subtitle v-html="comment.body"></v-list-item-subtitle>
+                                            </v-list-item-content>
+                                            </v-list-item>
+                                        </template>
+                                    </v-list>
+                                
+                                <v-flex xs12>
+                                    <v-textarea
+                                    outlined
+                                    name="mgs-body"
+                                    label="Escriba su comentario aquí"
+                                    value=""
+                                    :color="color_base"
+                                    auto-grow
+                                    hint="Pulsa enter para enviar"
+                                    rows="1"
+                                    ></v-textarea>
+                                </v-flex>
+
+                                </v-layout>
+                            </v-container>
+                            </v-card-text>
+                        </v-card>
+                        </v-dialog>
+                    </v-layout>
+                </template>
                 </v-flex>
             </v-layout>
 
@@ -87,7 +147,7 @@
                 </v-layout>
             </template>
 
-            <template id="comments-dialog">
+            <!-- <template id="comments-dialog">
                 <v-layout justify-center>
                     <v-dialog v-model="comments_dialog" max-width="600px">
                     
@@ -146,7 +206,7 @@
                     </v-card>
                     </v-dialog>
                 </v-layout>
-            </template>
+            </template> -->
 
             <v-btn
                 :color="color_base"
@@ -177,30 +237,34 @@ export default {
       likes: [],
       comments: [
         { header: 'Comentarios' },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-          user: 'Ali Connors',
-          body: "I'll be in your neighborhood doing errands this weekend. Do you want to hang out?",
-        },
-        { divider: true, inset: true },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-          user: 'Jennifer',
-          body: "Wish I could come, but I'm out of town this weekend.",
-        },
-        { divider: true, inset: true },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-          user: 'Sandra Adams',
-          body: "Do you have Paris recommendations? Have you ever been?",
-        },
+        // {
+        //   avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
+        //   user: 'Ali Connors',
+        //   body: "I'll be in your neighborhood doing errands this weekend. Do you want to hang out?",
+        // },
+        // { divider: true, inset: true },
+        // {
+        //   avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+        //   user: 'Jennifer',
+        //   body: "Wish I could come, but I'm out of town this weekend.",
+        // },
+        // { divider: true, inset: true },
+        // {
+        //   avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
+        //   user: 'Sandra Adams',
+        //   body: "Do you have Paris recommendations? Have you ever been?",
+        // },
       ],
       msg_dialog: false,
       comments_dialog: false,
       likedColor: 'red',
     }),
     mounted () {
-        this.getPosts()
+        this.getPosts(),
+        console.log('Usuario loggeado: ', this.$store.state.user)
+    },
+    computed: {
+        ...mapState(['color_base', 'user'])
     },
     methods: {
         debug() {
@@ -211,11 +275,6 @@ export default {
             this.getPosts()
             // console.log(response.data.result)
         },
-        // async getPosts () {
-        //     const response = await PostService.fetchPosts()
-        //     this.posts = response
-        //     console.log("Desde home ", this.posts)
-        // },
         getPosts () {
             PostService.fetchPosts().then(response=>{
                 response.data.posts.forEach((post, index) => {
@@ -227,16 +286,11 @@ export default {
                         }
                     })
                 })
-                // Object.assign(this.posts, response)
-                // console.log("respuesta desde home ", this.posts)
             })
         },
     },
     // created() {
     //     this.getPosts()
     // },
-  computed: {
-        ...mapState(['color_base'])
-    }
 }
 </script>

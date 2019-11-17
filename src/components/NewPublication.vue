@@ -75,14 +75,17 @@ export default {
         price: ''
     }),
     computed: {
-        ...mapState(['color_base'])
+        ...mapState(['color_base', 'user'])
     },
     methods: {
         async addPost (e) {
             e.preventDefault()
             await PostService.addPost({
+                user: this.$store.state.user,
                 title: this.title,
                 description: this.description,
+                category: 'Sin categoria',
+                image: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
                 price: this.price
             })
             this.$swal(

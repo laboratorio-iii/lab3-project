@@ -62,7 +62,7 @@ export default {
         }
     }),
     computed: {
-        ...mapState(['color_base']),
+        ...mapState(['color_base', 'user']),
     }, 
     methods: {
         ...mapMutations(['setUser']),
@@ -76,6 +76,7 @@ export default {
                 window.localStorage.setItem('_token', response.data.token)
                 this.setUser(response.data.user)
                 this.$router.push({ name: 'profile' })
+                console.log('Usuario: ', this.$store.state.user)
             }
             this.$router.push({ name: 'login' })
         }
