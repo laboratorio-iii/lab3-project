@@ -30,7 +30,7 @@
                     <v-card-actions>
                     <v-spacer></v-spacer>
 
-                    <v-btn icon :color="post.color"
+                    <v-btn icon :color="post.liked ? likedColor : 'none'"
                     @click="like(post._id)">
                         <v-icon>favorite</v-icon>
                     </v-btn>
@@ -174,6 +174,7 @@ import LikeService from '@/services/LikeService'
 export default {
     data: () => ({
       posts: [],
+      likes: [],
       comments: [
         { header: 'Comentarios' },
         {
@@ -207,16 +208,32 @@ export default {
         },
         async like(i) {
             const response = await LikeService.like(i)
-            console.log(response.data.result)
+            this.getPosts()
+            // console.log(response.data.result)
         },
-        async getPosts () {
-            const response = await PostService.fetchPosts()
-            this.posts = response
-            console.log(this.posts)
+        // async getPosts () {
+        //     const response = await PostService.fetchPosts()
+        //     this.posts = response
+        //     console.log("Desde home ", this.posts)
+        // },
+        getPosts () {
+            PostService.fetchPosts().then(response=>{
+                response.data.posts.forEach((post, index) => {
+                    this.posts = response.data.posts
+                    response.data.likes.forEach(like => {
+                        if(like.user == 'hermes@gmail.com' && like.post == post._id && like.status) {
+                            this.likes.push(like)
+                            this.posts[index].liked = like.status
+                        }
+                    })
+                })
+                // Object.assign(this.posts, response)
+                // console.log("respuesta desde home ", this.posts)
+            })
         },
     },
     // created() {
-
+    //     this.getPosts()
     // },
   computed: {
         ...mapState(['color_base'])

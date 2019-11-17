@@ -253,7 +253,7 @@ export default {
           { title: 'Cindy Baker', avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg' },
         ],        
         cities: ['Barquisimeto', 'Maracaibo',],
-        citi_value: ['Barquisimeto', 'Maracaibo',],
+        city_value: ['Barquisimeto', 'Maracaibo',],
         posts: [
         { title: 'Pre-fab homes', img: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
         descripcion: 'Lorem ipsum dolor sit amet consectetur adipiscing elit commodo, taciti vulputate at praesent eu aliquam pulvinar.',
