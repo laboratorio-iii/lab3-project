@@ -88,11 +88,11 @@ export default {
                 image: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
                 price: this.price
             })
-            this.$swal(
-                'Great!',
-                `Your post has been added!`,
-                'success'
-            )
+            // this.$swal(
+            //     'Great!',
+            //     `Your post has been added!`,
+            //     'success'
+            // )
             this.$router.push({ name: 'home' })
         }
     }
