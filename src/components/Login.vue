@@ -75,10 +75,9 @@ export default {
             if(response.data.success) {
                 window.localStorage.setItem('_token', response.data.token)
                 this.setUser(response.data.user)
-                this.$router.push({ name: 'profile' })
+                this.$router.push({ name: 'home' })
                 console.log('Usuario: ', this.$store.state.user)
             }
-            this.$router.push({ name: 'login' })
         }
     }
 }

@@ -35,7 +35,8 @@
                         <v-icon>favorite</v-icon>
                     </v-btn>
 
-                    <v-btn icon @click="comments_dialog = true">
+                    <!-- <v-btn icon @click="comments_dialog = true"> -->
+                    <v-btn icon @click="showComments(index, post._id)">
                         <v-icon>fa fa-comment</v-icon>
                     </v-btn>
                     
@@ -44,9 +45,13 @@
                     </v-btn>
                     </v-card-actions>
                 </v-card>
-                <template id="comments-dialog">
+                
+                </v-flex>
+            </v-layout>
+
+            <template id="comments-dialog">
                     <v-layout justify-center>
-                        <v-dialog v-model="comments_dialog" max-width="600px">
+                        <v-dialog v-model="comments_dialog" max-width="600px" @click:outside="hideComments">
                         
                         <v-card>
                             <v-card-text>
@@ -54,19 +59,18 @@
                                 <v-layout wrap>
                                     <v-list three-line>
                                         <v-subheader>Comentarios</v-subheader>
-                                        <template v-for="(comment, c_index) in post.comments">
+                                        <template v-for="(comment, c_index) in comments">
                                             <!-- <v-subheader
                                             v-if="comment.header"
                                             :key="comment.header"
                                             v-text="comment.header"
                                             ></v-subheader> -->
 
-                                            <!-- <v-divider
-                                            v-else-if="comment.divider"
-                                            :key="index"
-                                            :inset="comment.inset"
+                                            <v-divider
+                                            :key="comment.title"
+                                            inset
                                             color="orange"
-                                            ></v-divider> -->
+                                            ></v-divider>
 
                                             <v-list-item
                                             :key="c_index"
@@ -96,7 +100,7 @@
                                             auto-grow
                                             hint="Pulsa enter para enviar"
                                             rows="1"
-                                            @keyup="addComment(post._id, index)"
+                                            @keyup="addComment(post.id, post.index)"
                                             ></v-textarea>
                                         </v-form>
                                     </v-flex>
@@ -108,12 +112,10 @@
                         </v-dialog>
                     </v-layout>
                 </template>
-                </v-flex>
-            </v-layout>
 
             <template id="msg-dialog">
                 <v-layout justify-center>
-                    <v-dialog v-model="msg_dialog" max-width="600px">
+                    <v-dialog v-model="msg_dialog" max-width="600px" @abort="debug">
                     
                     <v-card>
                         <v-card-title>
@@ -178,6 +180,10 @@ import CommentService from '@/services/CommentService'
 export default {
     data: () => ({
       posts: [],
+      post: {
+          id: '',
+          index: ''
+      },
       likes: [],
       comments: [],
       new_comment: '',
@@ -217,8 +223,23 @@ export default {
                             this.posts[index].comments.push(comment)
                         }
                     })
+                    // this.comments = response.data.comments
                 })
             })
+        },
+        showComments(index, id) {
+            this.comments = []
+            this.comments_dialog = true
+            this.post.index = index
+            this.post.id = id
+            this.posts[index].comments.forEach(comment => {
+                if(comment.post == id) {
+                    this.comments.push(comment)
+                }
+            })
+        },
+        hideComments() {
+            this.comments = []
         },
         addComment(post, i) {
             if (event.keyCode === 13) {
@@ -230,6 +251,12 @@ export default {
                 })
 
                 this.posts[i].comments.push({
+                    post: post,
+                    user: this.$store.state.user.username,
+                    avatar: this.$store.state.user.image,
+                    content: this.new_comment
+                })
+                this.comments.push({
                     post: post,
                     user: this.$store.state.user.username,
                     avatar: this.$store.state.user.image,
