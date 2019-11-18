@@ -35,7 +35,8 @@
                         <v-icon>favorite</v-icon>
                     </v-btn>
 
-                    <v-btn icon @click="comments_dialog = true">
+                    <!-- <v-btn icon @click="comments_dialog = true"> -->
+                    <v-btn icon @click="showComments(index, post._id)">
                         <v-icon>fa fa-comment</v-icon>
                     </v-btn>
                     
@@ -44,58 +45,65 @@
                     </v-btn>
                     </v-card-actions>
                 </v-card>
-                <template id="comments-dialog">
+                
+                </v-flex>
+            </v-layout>
+
+            <template id="comments-dialog">
                     <v-layout justify-center>
-                        <v-dialog v-model="comments_dialog" max-width="600px">
+                        <v-dialog v-model="comments_dialog" max-width="600px" @click:outside="hideComments">
                         
                         <v-card>
                             <v-card-text>
                             <v-container grid-list-md>
                                 <v-layout wrap>
                                     <v-list three-line>
-                                        <template v-for="(comment, index) in comments">
-                                            <v-subheader
+                                        <v-subheader>Comentarios</v-subheader>
+                                        <template v-for="(comment, c_index) in comments">
+                                            <!-- <v-subheader
                                             v-if="comment.header"
                                             :key="comment.header"
                                             v-text="comment.header"
-                                            ></v-subheader>
+                                            ></v-subheader> -->
 
                                             <v-divider
-                                            v-else-if="comment.divider"
-                                            :key="index"
-                                            :inset="comment.inset"
+                                            :key="comment.title"
+                                            inset
                                             color="orange"
                                             ></v-divider>
 
                                             <v-list-item
-                                            v-else
-                                            :key="comment.title"
-                                            @click="debug"
+                                            :key="c_index"
                                             >
+                                            
                                             <v-list-item-avatar>
                                                 <v-img :src="comment.avatar"></v-img>
                                             </v-list-item-avatar>
 
                                             <v-list-item-content>
                                                 <v-list-item-title v-html="comment.user"></v-list-item-title>
-                                                <v-list-item-subtitle v-html="comment.body"></v-list-item-subtitle>
+                                                <v-list-item-subtitle v-html="comment.content"></v-list-item-subtitle>
                                             </v-list-item-content>
                                             </v-list-item>
                                         </template>
                                     </v-list>
-                                
-                                <v-flex xs12>
-                                    <v-textarea
-                                    outlined
-                                    name="mgs-body"
-                                    label="Escriba su comentario aquí"
-                                    value=""
-                                    :color="color_base"
-                                    auto-grow
-                                    hint="Pulsa enter para enviar"
-                                    rows="1"
-                                    ></v-textarea>
-                                </v-flex>
+
+                                    <v-flex xs12>
+                                        <v-form>
+                                            <v-textarea
+                                            outlined
+                                            name="mgs-body"
+                                            label="Escriba su comentario aquí"
+                                            value=""
+                                            v-model="new_comment"
+                                            :color="color_base"
+                                            auto-grow
+                                            hint="Pulsa enter para enviar"
+                                            rows="1"
+                                            @keyup="addComment(post.id, post.index)"
+                                            ></v-textarea>
+                                        </v-form>
+                                    </v-flex>
 
                                 </v-layout>
                             </v-container>
@@ -104,12 +112,10 @@
                         </v-dialog>
                     </v-layout>
                 </template>
-                </v-flex>
-            </v-layout>
 
             <template id="msg-dialog">
                 <v-layout justify-center>
-                    <v-dialog v-model="msg_dialog" max-width="600px">
+                    <v-dialog v-model="msg_dialog" max-width="600px" @abort="debug">
                     
                     <v-card>
                         <v-card-title>
@@ -147,67 +153,6 @@
                 </v-layout>
             </template>
 
-            <!-- <template id="comments-dialog">
-                <v-layout justify-center>
-                    <v-dialog v-model="comments_dialog" max-width="600px">
-                    
-                    <v-card>
-                        <v-card-text>
-                        <v-container grid-list-md>
-                            <v-layout wrap>
-                                <v-list three-line>
-                                    <template v-for="(comment, index) in comments">
-                                        <v-subheader
-                                        v-if="comment.header"
-                                        :key="comment.header"
-                                        v-text="comment.header"
-                                        ></v-subheader>
-
-                                        <v-divider
-                                        v-else-if="comment.divider"
-                                        :key="index"
-                                        :inset="comment.inset"
-                                        color="orange"
-                                        ></v-divider>
-
-                                        <v-list-item
-                                        v-else
-                                        :key="comment.title"
-                                        @click="debug"
-                                        >
-                                        <v-list-item-avatar>
-                                            <v-img :src="comment.avatar"></v-img>
-                                        </v-list-item-avatar>
-
-                                        <v-list-item-content>
-                                            <v-list-item-title v-html="comment.user"></v-list-item-title>
-                                            <v-list-item-subtitle v-html="comment.body"></v-list-item-subtitle>
-                                        </v-list-item-content>
-                                        </v-list-item>
-                                    </template>
-                                </v-list>
-                            
-                            <v-flex xs12>
-                                <v-textarea
-                                outlined
-                                name="mgs-body"
-                                label="Escriba su comentario aquí"
-                                value=""
-                                :color="color_base"
-                                auto-grow
-                                hint="Pulsa enter para enviar"
-                                rows="1"
-                                ></v-textarea>
-                            </v-flex>
-
-                            </v-layout>
-                        </v-container>
-                        </v-card-text>
-                    </v-card>
-                    </v-dialog>
-                </v-layout>
-            </template> -->
-
             <v-btn
                 :color="color_base"
                 dark
@@ -230,38 +175,24 @@
 import {mapState} from 'vuex'
 import PostService from '@/services/PostService'
 import LikeService from '@/services/LikeService'
+import CommentService from '@/services/CommentService'
 
 export default {
     data: () => ({
       posts: [],
+      post: {
+          id: '',
+          index: ''
+      },
       likes: [],
-      comments: [
-        { header: 'Comentarios' },
-        // {
-        //   avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-        //   user: 'Ali Connors',
-        //   body: "I'll be in your neighborhood doing errands this weekend. Do you want to hang out?",
-        // },
-        // { divider: true, inset: true },
-        // {
-        //   avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        //   user: 'Jennifer',
-        //   body: "Wish I could come, but I'm out of town this weekend.",
-        // },
-        // { divider: true, inset: true },
-        // {
-        //   avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-        //   user: 'Sandra Adams',
-        //   body: "Do you have Paris recommendations? Have you ever been?",
-        // },
-      ],
+      comments: [],
+      new_comment: '',
       msg_dialog: false,
       comments_dialog: false,
       likedColor: 'red',
     }),
     mounted () {
-        this.getPosts(),
-        console.log('Usuario loggeado: ', this.$store.state.user)
+        this.getPosts()
     },
     computed: {
         ...mapState(['color_base', 'user'])
@@ -276,18 +207,64 @@ export default {
             // console.log(response.data.result)
         },
         getPosts () {
-            PostService.fetchPosts().then(response=>{
+            PostService.fetchPosts(this.$store.state.user.username).then(response=>{
                 response.data.posts.forEach((post, index) => {
                     this.posts = response.data.posts
+                    // console.log(this.posts)
                     response.data.likes.forEach(like => {
-                        if(like.user == 'hermes@gmail.com' && like.post == post._id && like.status) {
+                        if(like.user == this.$store.state.user.username && like.post == post._id && like.status) {
                             this.likes.push(like)
                             this.posts[index].liked = like.status
                         }
                     })
+                    response.data.comments.forEach(comment => {
+                        if(comment.post == this.posts[index]._id) {
+                            // this.comments.push(comment)
+                            this.posts[index].comments.push(comment)
+                        }
+                    })
+                    // this.comments = response.data.comments
                 })
             })
         },
+        showComments(index, id) {
+            this.comments = []
+            this.comments_dialog = true
+            this.post.index = index
+            this.post.id = id
+            this.posts[index].comments.forEach(comment => {
+                if(comment.post == id) {
+                    this.comments.push(comment)
+                }
+            })
+        },
+        hideComments() {
+            this.comments = []
+        },
+        addComment(post, i) {
+            if (event.keyCode === 13) {
+                CommentService.addComment({
+                    post: post,
+                    user: this.$store.state.user.username,
+                    avatar: this.$store.state.user.image,
+                    content: this.new_comment
+                })
+
+                this.posts[i].comments.push({
+                    post: post,
+                    user: this.$store.state.user.username,
+                    avatar: this.$store.state.user.image,
+                    content: this.new_comment
+                })
+                this.comments.push({
+                    post: post,
+                    user: this.$store.state.user.username,
+                    avatar: this.$store.state.user.image,
+                    content: this.new_comment
+                })
+                this.new_comment = ''
+            }
+        }
     },
     // created() {
     //     this.getPosts()

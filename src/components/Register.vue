@@ -16,7 +16,7 @@
                                             
                                             label="Nombre"
                                             id="nombre"
-                                            v-model="name"
+                                            v-model="firstname"
                                         ></v-text-field>
                                     </v-flex>
 
@@ -50,6 +50,31 @@
                                             </template>
                                             <v-date-picker :color="color_base" v-model="date" @input="menu = false"></v-date-picker>
                                         </v-menu>
+                                    </v-flex>
+
+                                    <v-flex>
+                                        <v-select
+                                            v-model="state"
+                                            :items="states"
+                                            menu-props="auto"
+                                            label="Seleccionar estado"
+                                            hide-details
+                                            prepend-icon="map"
+                                            single-line
+                                            @change="getCities(state)"
+                                        ></v-select>
+                                    </v-flex>
+
+                                    <v-flex>
+                                        <v-select
+                                            v-model="city"
+                                            :items="cities"
+                                            menu-props="auto"
+                                            label="Seleccionar ciudad"
+                                            hide-details
+                                            prepend-icon="map"
+                                            single-line
+                                        ></v-select>
                                     </v-flex>
 
                                     <v-flex>
@@ -104,13 +129,20 @@
 <script>
 import {mapState} from 'vuex'
 import UserService from '@/services/UserService'
+import StateService from '@/services/StateService'
+import CityService from '@/services/CityService'
 
 export default {
     data: () => ({
         show: false,
-        name: '',
+        firstname: '',
         lastname: '',
         date: new Date().toISOString().substr(0, 10),
+        state: '',
+        states: [],
+        // _states: [],
+        city: '',
+        cities: [],
         username: '',
         password: '',
         menu: false,
@@ -119,15 +151,45 @@ export default {
             min: v => v.length >= 8 || 'Mínimo 8 caracteres',
         }
     }),
+    mounted () {
+        this.getStates()
+    },
     computed: {
     ...mapState(['color_base'])
     },
     methods: {
+        getStates () {
+            StateService.fetchStates().then(response=>{
+                response.data.states.forEach((state, index) => {
+                    this.states.push(state.name)
+                })
+            })
+        },
+        getCities (param) {
+            this.cities = []
+            CityService.fetchCities(param).then(response=>{
+                if(typeof response.data.cities === 'object'){
+                    this.cities.push(response.data.cities.name)
+                } else{
+                    response.data.cities.forEach((city, index) => {
+                        this.cities.push(city.name)
+                    })
+                }
+            })
+        },
         async addUser (e) {
             e.preventDefault()
             await UserService.addUser({
                 username: this.username,
-                password: this.password
+                password: this.password,
+                image: 'https://randomuser.me/api/portraits/men/78.jpg',
+                person: {
+                    firstname: this.firstname,
+                    lastname: this.lastname,
+                    date: this.date,
+                    state: this.state,
+                    city: this.city
+                }
             })
             // this.$swal(
             //     'Great!',
