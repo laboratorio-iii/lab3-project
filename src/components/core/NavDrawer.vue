@@ -4,12 +4,12 @@
             <template v-slot:prepend>
                 <v-list-item two-line>
                 <v-list-item-avatar>
-                    <img src="https://randomuser.me/api/portraits/men/78.jpg">
+                    <img :src="user.image">
                 </v-list-item-avatar>
 
                 <v-list-item-content>
-                    <v-list-item-title>Bruce Wayne</v-list-item-title>
-                    <v-list-item-subtitle>Usuario</v-list-item-subtitle>
+                    <v-list-item-title v-text="user.username"></v-list-item-title>
+                    <v-list-item-subtitle v-text="user.rol == 'Regular' ? 'Negociante' : ''"></v-list-item-subtitle>
                 </v-list-item-content>
                 </v-list-item>
             </template>
@@ -89,7 +89,7 @@ export default {
         ],
     }),
     computed: {
-        ...mapState(['color_base']),
+        ...mapState(['color_base', 'user']),
         drawerValue: {
             get () {
                 return this.$store.state.drawer
