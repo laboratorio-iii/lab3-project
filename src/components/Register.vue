@@ -167,7 +167,7 @@ export default {
         },
         getCities (param) {
             this.cities = []
-            CityService.fetchCities(param).then(response=>{
+            CityService.fetchCitiesByState(param).then(response=>{
                 if(typeof response.data.cities === 'object'){
                     this.cities.push(response.data.cities.name)
                 } else{
@@ -191,11 +191,11 @@ export default {
                     city: this.city
                 }
             })
-            // this.$swal(
-            //     'Great!',
-            //     `Your post has been added!`,
-            //     'success'
-            // )
+            this.$swal(
+                'Great!',
+                `Your post has been added!`,
+                'success'
+            )
             this.$router.push({ name: 'login' })
         }
     }

@@ -202,7 +202,7 @@ export default {
             console.log(event.target)
         },
         async like(i) {
-            const response = await LikeService.like(i)
+            const response = await LikeService.like({post: i, user: this.$store.state.user.username})
             this.getPosts()
             // console.log(response.data.result)
         },
@@ -233,9 +233,9 @@ export default {
             this.post.index = index
             this.post.id = id
             this.posts[index].comments.forEach(comment => {
-                if(comment.post == id) {
+                // if(comment.post == id) {
                     this.comments.push(comment)
-                }
+                // }
             })
         },
         hideComments() {
