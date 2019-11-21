@@ -9,6 +9,8 @@
                         single-line
                         hide-details
                         :color="color_base"
+                        v-model="search"
+                        @keyup="buscar()"
                     ></v-text-field>
                 </v-flex>
             </v-layout>
@@ -36,7 +38,7 @@
                         <v-layout row wrap align-center>
                             <v-flex x12>
                                 <v-select
-                                    v-model="city_value"
+                                    v-model="city"
                                     :items="cities"
                                     attach
                                     chips
@@ -47,8 +49,8 @@
                             </v-flex>
                         </v-layout>
                         <template v-for="(user, index) in users">
-                            <v-divider v-if="!user.last" inset :key="index"></v-divider>
-                            <v-list-item :key="user.title" @click="debug">
+                            <!-- <v-divider inset :key="index"></v-divider> -->
+                            <v-list-item :key="index" @click="debug">
                                 <v-list-item-icon>
                                 <v-btn x-small class="font-weight-light">
                                     <v-icon dark left>done</v-icon>Seguir
@@ -56,14 +58,14 @@
                                 </v-list-item-icon>
 
                                 <v-list-item-content>
-                                <v-list-item-title v-text="user.title" right></v-list-item-title>
+                                <v-list-item-title v-text="user.username" right></v-list-item-title>
                                 </v-list-item-content>
 
                                 <v-list-item-avatar>
-                                <v-img :src="user.avatar"></v-img>
+                                <v-img :src="user.image"></v-img>
                                 </v-list-item-avatar>
                             </v-list-item>
-
+                            <v-divider inset :key="user._id"></v-divider>
                         </template>
                     </div>
 
@@ -239,6 +241,8 @@
 
 <script>
 import {mapState} from 'vuex'
+import UserService from '@/services/UserService'
+import CityService from '@/services/CityService'
 
 export default {
     data: () => ({
@@ -246,27 +250,28 @@ export default {
         items: [
             'Usuarios', 'Publicaciones',
         ],
+        search: '',
         users: [
-          { last: true, title: 'Jason Oner', avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg', },
-          { title: 'Travis Howard', avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg' },
-          { title: 'Ali Connors', avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg' },
-          { title: 'Cindy Baker', avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg' },
-        ],        
-        cities: ['Barquisimeto', 'Maracaibo',],
-        city_value: ['Barquisimeto', 'Maracaibo',],
+        //   { last: true, title: 'Jason Oner', avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg', },
+        //   { title: 'Travis Howard', avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg' },
+        //   { title: 'Ali Connors', avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg' },
+        //   { title: 'Cindy Baker', avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg' },
+        ],
+        city: '',
+        cities: [],
         posts: [
-        { title: 'Pre-fab homes', img: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
-        descripcion: 'Lorem ipsum dolor sit amet consectetur adipiscing elit commodo, taciti vulputate at praesent eu aliquam pulvinar.',
-        price: 20, liked: true, xsflex: 12, mdflex: 6, color: '' },
-        { title: 'Favorite road trips', img: 'https://cdn.vuetifyjs.com/images/cards/road.jpg',
-        descripcion: 'Lorem ipsum dolor sit amet consectetur, adipiscing elit conubia mi eu accumsan, aliquet nascetur pellentesque dictumst.',
-        price: 60, liked: false, xsflex: 12, mdflex: 6, color: '' },
-        { title: 'Best airlines', img: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg',
-        descripcion: 'Lorem ipsum dolor sit amet consectetur adipiscing elit urna, euismod sagittis metus sapien facilisi tortor habitasse.',
-        price: 40, liked: false, xsflex: 12, mdflex: 6, color: '' },
-        { title: 'Lorem ipsum dolor.', img: 'https://cdn.vuetifyjs.com/images/cards/docks.jpg',
-        descripcion: 'Lorem ipsum dolor sit amet consectetur adipiscing elit nec, aptent praesent donec per lacus fringilla varius.',
-        price: 30, liked: false, xsflex: 12, mdflex: 6, color: '' },
+        // { title: 'Pre-fab homes', img: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
+        // descripcion: 'Lorem ipsum dolor sit amet consectetur adipiscing elit commodo, taciti vulputate at praesent eu aliquam pulvinar.',
+        // price: 20, liked: true, xsflex: 12, mdflex: 6, color: '' },
+        // { title: 'Favorite road trips', img: 'https://cdn.vuetifyjs.com/images/cards/road.jpg',
+        // descripcion: 'Lorem ipsum dolor sit amet consectetur, adipiscing elit conubia mi eu accumsan, aliquet nascetur pellentesque dictumst.',
+        // price: 60, liked: false, xsflex: 12, mdflex: 6, color: '' },
+        // { title: 'Best airlines', img: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg',
+        // descripcion: 'Lorem ipsum dolor sit amet consectetur adipiscing elit urna, euismod sagittis metus sapien facilisi tortor habitasse.',
+        // price: 40, liked: false, xsflex: 12, mdflex: 6, color: '' },
+        // { title: 'Lorem ipsum dolor.', img: 'https://cdn.vuetifyjs.com/images/cards/docks.jpg',
+        // descripcion: 'Lorem ipsum dolor sit amet consectetur adipiscing elit nec, aptent praesent donec per lacus fringilla varius.',
+        // price: 30, liked: false, xsflex: 12, mdflex: 6, color: '' },
       ],
       categories: ['Hogar', 'Teconología',],
       category_value: ['Hogar', 'Teconología',],
@@ -294,6 +299,9 @@ export default {
       comments_dialog: false,
       likedColor: 'red',
     }),
+    mounted() {
+        this.getCities()
+    },
     computed: {
         ...mapState(['color_base'])
     },
@@ -304,6 +312,48 @@ export default {
         like(i) {
             this.posts[i].liked ? [this.posts[i].color = 'none', this.posts[i].liked = false] :
              [this.posts[i].color = this.likedColor, this.posts[i].liked = true]
+        },
+        getCities () {
+            CityService.fetchCities().then(response => {
+                response.data.cities.forEach((city, index) => {
+                    this.cities.push(city.name)
+                })
+            })
+        },
+        // searchUser(input, cities) {
+        //     UserService.searchUser({input, cities}).then(response => {
+        //         response.data.users.forEach(user => {
+        //             console.log(user)
+        //             this.users.push(user)
+        //         })
+        //     })
+        // },
+        searchUser(input, cities) {
+            if(cities == ''){
+                UserService.searchUser({input}).then(response => {
+                    response.data.users.forEach(user => {
+                        console.log(user)
+                        this.users.push(user)
+                    })
+                })
+            }else{
+                cities.forEach(city=>{
+                    UserService.searchUserByCity({input, city}).then(response => {
+                        response.data.users.forEach(user => {
+                            console.log(user)
+                            this.users.push(user)
+                        })
+                    })
+                })
+            }
+        },
+        buscar() {
+            if(this.tab == 0){
+                this.users = []
+                this.searchUser(this.search, this.city)
+            }else{
+                console.log('Buscar post: ', this.search)
+            }
         }
     },
     created() {

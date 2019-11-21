@@ -167,7 +167,7 @@ export default {
         },
         getCities (param) {
             this.cities = []
-            CityService.fetchCities(param).then(response=>{
+            CityService.fetchCitiesByState(param).then(response=>{
                 if(typeof response.data.cities === 'object'){
                     this.cities.push(response.data.cities.name)
                 } else{

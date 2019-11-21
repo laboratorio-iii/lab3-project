@@ -9,6 +9,14 @@ export default {
     return api().post('auth/register', params)
   },
 
+  searchUser(params) {
+    return api().post('user/search', params)
+  },
+
+  searchUserByCity(params) {
+    return api().post('user/search/city', params)
+  },
+
   updateUser (params) {
     return api().put('user/' + params.id, params)
   },
