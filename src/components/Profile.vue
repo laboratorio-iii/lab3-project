@@ -149,7 +149,7 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import {mapState, mapMutations} from 'vuex'
 import Publicaciones from './Publicaciones'
 import Seguidores from './Seguidores'
 import Seguidos from './Seguidos'
@@ -177,15 +177,28 @@ export default {
         ciudades: ['Barquisimeto', 'Maracaibo'],
     }),
     mounted() {
-        console.log(this.$route.params.id)
+        this.onNavBtn()
+        // console.log(this.$route.params.user)
     },
     computed: {
-        ...mapState(['color_base'])
+        ...mapState(['color_base']),
+        activeBtnValue: {
+            get () {
+                return this.$store.state.activeBtn
+            },
+            set (val) {
+                this.setActiveBtn(val)
+            }
+        }, 
     },
     methods: {
+        ...mapMutations(['setActiveBtn']),
+        onNavBtn () {
+            this.setActiveBtn()
+        },
          onPickFile() {
              this.$refs.fileInput.click()
-         }
+         },
     },
 }
 </script>

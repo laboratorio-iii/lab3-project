@@ -44,7 +44,7 @@
                     </v-list-item>
 
                     <v-list-item v-else-if="item.params" :key="index"
-                        :to="{ name: item.route, params: { id: user._id } }"
+                        :to="{ name: item.route, params: { user: user.username } }"
                         color="grey darken-4">
                         <v-list-item-icon>
                             <v-icon v-text="item.icon"></v-icon>

@@ -40,7 +40,7 @@ export default {
     methods: {
         ...mapMutations(['setActiveBtn']),
         onNavBtn () {
-        this.setActiveBtn(this.$store.state.activeBtn)
+            this.setActiveBtn(this.$store.state.activeBtn)
         },
     },
 }

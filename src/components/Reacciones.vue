@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
     data: () => ({
@@ -74,7 +74,25 @@ export default {
       ],
       likedColor: 'red',
     }),
+    mounted() {
+        this.onNavBtn()
+    },
+    computed: {
+        ...mapState(['color_base']),
+        activeBtnValue: {
+            get () {
+                return this.$store.state.activeBtn
+            },
+            set (val) {
+                this.setActiveBtn(val)
+            }
+        }, 
+    },
     methods: {
+        ...mapMutations(['setActiveBtn']),
+        onNavBtn () {
+            this.setActiveBtn()
+        },
         like(i) {
             this.posts[i].liked ? [this.posts[i].color = 'none', this.posts[i].liked = false] :
              [this.posts[i].color = this.likedColor, this.posts[i].liked = true]
@@ -84,9 +102,6 @@ export default {
         this.posts.forEach(element => {
             element.liked ? element.color = this.likedColor : element.color = 'none'
         });
-    },
-  computed: {
-        ...mapState(['color_base'])
     }
 }
 </script>

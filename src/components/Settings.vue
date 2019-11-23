@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
     data: () => ({
@@ -68,8 +68,28 @@ export default {
             min: v => v.length >= 8 || 'Mínimo 8 caracteres',
         }
     }),
+    mounted() {
+        this.onNavBtn()
+    },
     computed: {
-    ...mapState(['color_base'])
-  }
+    ...mapState(['color_base']),
+    activeBtnValue: {
+            get () {
+                return this.$store.state.activeBtn
+            },
+            set (val) {
+                this.setActiveBtn(val)
+            }
+        }, 
+  },
+  methods: {
+        ...mapMutations(['setActiveBtn']),
+        onNavBtn () {
+            this.setActiveBtn()
+        },
+         onPickFile() {
+             this.$refs.fileInput.click()
+         },
+    },
 }
 </script>

@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import PostService from '@/services/PostService'
 import CategoryService from '@/services/CategoryService'
 
@@ -90,12 +90,25 @@ export default {
         price: ''
     }),
     mounted () {
+        this.onNavBtn(),
         this.getCategories()
     },
     computed: {
-        ...mapState(['color_base', 'user'])
+        ...mapState(['color_base', 'user']),
+        activeBtnValue: {
+            get () {
+                return this.$store.state.activeBtn
+            },
+            set (val) {
+                this.setActiveBtn(val)
+            }
+        },
     },
     methods: {
+        ...mapMutations(['setActiveBtn']),
+        onNavBtn () {
+            this.setActiveBtn()
+        },
         getCategories () {
             CategoryService.fetchCategories().then(response=>{
                 response.data.categories.forEach((category, index) => {
