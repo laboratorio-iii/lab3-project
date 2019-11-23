@@ -53,7 +53,7 @@
                                     </v-flex>
 
                                     <v-flex>
-                                        <v-select
+                                        <v-select :color="color_base"
                                             v-model="state"
                                             :items="states"
                                             menu-props="auto"
@@ -66,7 +66,7 @@
                                     </v-flex>
 
                                     <v-flex>
-                                        <v-select
+                                        <v-select :color="color_base"
                                             v-model="city"
                                             :items="cities"
                                             menu-props="auto"
@@ -140,7 +140,6 @@ export default {
         date: new Date().toISOString().substr(0, 10),
         state: '',
         states: [],
-        // _states: [],
         city: '',
         cities: [],
         username: '',

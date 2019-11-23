@@ -18,8 +18,33 @@
 
             <v-list dense>
                 <template v-for="(item, index) in items">
-                    <v-list-item v-if="!item.admin" :key="index"
+
+                    <v-list-item v-if="!item.admin && item.route == ''" :key="index" 
+                        @click="logout"
+                        color="grey darken-4">
+                        <v-list-item-icon>
+                            <v-icon v-text="item.icon"></v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title v-text="item.title"></v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+
+                    <v-list-item v-else-if="!item.admin && !item.params" :key="index"
                         :to="{ name: item.route }"
+                        color="grey darken-4">
+                        <v-list-item-icon>
+                            <v-icon v-text="item.icon"></v-icon>
+                        </v-list-item-icon>
+
+                        <v-list-item-content>
+                            <v-list-item-title v-text="item.title"></v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+
+                    <v-list-item v-else-if="item.params" :key="index"
+                        :to="{ name: item.route, params: { id: user._id } }"
                         color="grey darken-4">
                         <v-list-item-icon>
                             <v-icon v-text="item.icon"></v-icon>
@@ -54,16 +79,6 @@
                     
                 </template>
 
-                <v-list-item @click="logout"
-                    color="grey darken-4">
-                    <v-list-item-icon>
-                        <v-icon>power_settings_new</v-icon>
-                    </v-list-item-icon>
-
-                    <v-list-item-content>
-                        <v-list-item-title>Salir</v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
             </v-list>
         </v-navigation-drawer>
     </div>
@@ -75,12 +90,12 @@ import {mapState, mapMutations} from 'vuex'
 export default {
     data: () => ({
         items: [
-          { title: 'Nueva publicación', icon: 'add_circle', route: 'publication-create', admin: false },
-          { title: 'Mi perfil', icon: 'account_circle', route: 'profile', admin: false },
-          { title: 'Acceso', icon: 'lock', route: 'settings', admin: false },
-          { title: 'Mis reacciones', icon: 'favorite', route: 'likes' , admin: false },
-          { title: 'Gestionar', icon: 'pan_tool', route: '', admin: true },
-        //   { title: 'Salir', icon: 'power_settings_new', route: 'login', admin: false },
+          { title: 'Nueva publicación', icon: 'add_circle', route: 'publication-create', admin: false, params: false },
+          { title: 'Mi perfil', icon: 'account_circle', route: 'profile', admin: false, params: true },
+          { title: 'Acceso', icon: 'lock', route: 'settings', admin: false, params: false },
+          { title: 'Mis reacciones', icon: 'favorite', route: 'likes' , admin: false, params: false },
+          { title: 'Gestionar', icon: 'pan_tool', route: '', admin: true, params: false },
+          { title: 'Salir', icon: 'power_settings_new', route: '', admin: false, params: false }
         ],
         admins: [
             ['Usuarios', 'people_outline', 'users'],

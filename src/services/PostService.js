@@ -2,8 +2,11 @@ import api from '@/services/api'
 
 export default {
 
-  async fetchPosts (params) {
-      return api().get('post/' + params)
+  // async fetchPosts (params) {
+  //     return api().get('post/' + params)
+  // },
+  async fetchPosts () {
+    return api().get('post')
   },
 
   addPost (params) {

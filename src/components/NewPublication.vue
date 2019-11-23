@@ -39,16 +39,28 @@
                                             v-model="description"
                                         ></v-textarea>
                                     </v-flex>
+
+                                    <v-flex xs12>
+                                        <v-select :color="color_base"
+                                            v-model="category"
+                                            :items="categories"
+                                            menu-props="auto"
+                                            label="Categoría"
+                                            hide-details
+                                            prepend-icon="tag"
+                                            single-line
+                                        ></v-select>
+                                    </v-flex>
                                         
-                                    <v-flex xs8>
+                                    <v-flex xs12>
                                         <v-text-field :color="color_base"
-                                            
-                                            label="Precio $$$"
+
+                                            label="Precio"
                                             id="precio"
                                             v-model="price"
+                                            prepend-icon="money"
                                         ></v-text-field>
                                     </v-flex>
-
                                     
                                 </v-layout>
                                 
@@ -67,32 +79,40 @@
 <script>
 import {mapState} from 'vuex'
 import PostService from '@/services/PostService'
+import CategoryService from '@/services/CategoryService'
 
 export default {
     data: () => ({
         title: '',
         description: '',
+        category: '',
+        categories: [],
         price: ''
     }),
+    mounted () {
+        this.getCategories()
+    },
     computed: {
         ...mapState(['color_base', 'user'])
     },
     methods: {
+        getCategories () {
+            CategoryService.fetchCategories().then(response=>{
+                response.data.categories.forEach((category, index) => {
+                    this.categories.push(category.name)
+                })
+            })
+        },
         async addPost (e) {
             e.preventDefault()
             await PostService.addPost({
-                user: this.$store.state.user,
+                user: this.$store.state.user._id,
                 title: this.title,
                 description: this.description,
-                category: 'Sin categoria',
+                category: this.category,
                 image: 'https://cdn.vuetifyjs.com/images/cards/house.jpg',
                 price: this.price
             })
-            // this.$swal(
-            //     'Great!',
-            //     `Your post has been added!`,
-            //     'success'
-            // )
             this.$router.push({ name: 'home' })
         }
     }

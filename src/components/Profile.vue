@@ -176,6 +176,9 @@ export default {
         estados: ['Lara', 'Zulia'],
         ciudades: ['Barquisimeto', 'Maracaibo'],
     }),
+    mounted() {
+        console.log(this.$route.params.id)
+    },
     computed: {
         ...mapState(['color_base'])
     },

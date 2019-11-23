@@ -48,7 +48,7 @@ export default new Router({
       component: () => import('./views/Register.vue')
     },
     {
-      path: '/profile',
+      path: '/profile/:id',
       name: 'profile',
       component: () => import('./views/Profile.vue')
     },

@@ -6,7 +6,7 @@
             :color="color_base"
             >
             <v-btn v-for="(btn, index) in btns" :key="index" 
-            @click.stop="onNavBtn" :to="{ name: btn.route }" exact>
+            @click.stop="onNavBtn" :to="{ name: btn.route, params: {id: btn.param} }" exact>
                 <span v-text="btn.title"></span>
                 <v-icon v-text="btn.icon"></v-icon>
             </v-btn>
@@ -23,7 +23,7 @@ export default {
             {title: 'Inicio', icon: 'home', route: 'home'},
             {title: 'Búsqueda', icon: 'search', route: 'search'},
             {title: 'Notificaciones', icon: 'favorite', route: 'notifications'},
-            {title: 'Mensajería', icon: 'chat', route: 'chats'},
+            {title: 'Mensajería', icon: 'chat', route: 'chats'}
         ]
     }),
     computed: {

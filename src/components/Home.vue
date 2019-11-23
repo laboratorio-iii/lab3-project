@@ -77,11 +77,11 @@
                                             >
                                             
                                             <v-list-item-avatar>
-                                                <v-img :src="comment.avatar"></v-img>
+                                                <v-img :src="comment.user.image"></v-img>
                                             </v-list-item-avatar>
 
                                             <v-list-item-content>
-                                                <v-list-item-title v-html="comment.user"></v-list-item-title>
+                                                <v-list-item-title v-html="comment.user.username"></v-list-item-title>
                                                 <v-list-item-subtitle v-html="comment.content"></v-list-item-subtitle>
                                             </v-list-item-content>
                                             </v-list-item>
@@ -202,28 +202,17 @@ export default {
             console.log(event.target)
         },
         async like(i) {
-            const response = await LikeService.like({post: i, user: this.$store.state.user.username})
+            const response = await LikeService.like({post: i, user: this.$store.state.user._id})
             this.getPosts()
             // console.log(response.data.result)
         },
         getPosts () {
-            PostService.fetchPosts(this.$store.state.user.username).then(response=>{
+            PostService.fetchPosts().then(response => {
+                this.posts = response.data.posts
                 response.data.posts.forEach((post, index) => {
-                    this.posts = response.data.posts
-                    // console.log(this.posts)
-                    response.data.likes.forEach(like => {
-                        if(like.user == this.$store.state.user.username && like.post == post._id && like.status) {
-                            this.likes.push(like)
-                            this.posts[index].liked = like.status
-                        }
+                    LikeService.getLikesByUser(post._id).then(r => {
+                        this.posts[index].liked = r.data.liked
                     })
-                    response.data.comments.forEach(comment => {
-                        if(comment.post == this.posts[index]._id) {
-                            // this.comments.push(comment)
-                            this.posts[index].comments.push(comment)
-                        }
-                    })
-                    // this.comments = response.data.comments
                 })
             })
         },
@@ -232,10 +221,11 @@ export default {
             this.comments_dialog = true
             this.post.index = index
             this.post.id = id
-            this.posts[index].comments.forEach(comment => {
-                // if(comment.post == id) {
+
+            CommentService.getComments(id).then(response => {
+                response.data.comments.forEach(comment => {
                     this.comments.push(comment)
-                // }
+                })
             })
         },
         hideComments() {
@@ -245,21 +235,15 @@ export default {
             if (event.keyCode === 13) {
                 CommentService.addComment({
                     post: post,
-                    user: this.$store.state.user.username,
-                    avatar: this.$store.state.user.image,
-                    content: this.new_comment
-                })
-
-                this.posts[i].comments.push({
-                    post: post,
-                    user: this.$store.state.user.username,
-                    avatar: this.$store.state.user.image,
+                    user: this.$store.state.user._id,
                     content: this.new_comment
                 })
                 this.comments.push({
                     post: post,
-                    user: this.$store.state.user.username,
-                    avatar: this.$store.state.user.image,
+                    user: {
+                        username: this.$store.state.user.username,
+                        image: this.$store.state.user.image
+                    },
                     content: this.new_comment
                 })
                 this.new_comment = ''
