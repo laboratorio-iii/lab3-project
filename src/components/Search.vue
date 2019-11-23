@@ -251,12 +251,7 @@ export default {
             'Usuarios', 'Publicaciones',
         ],
         search: '',
-        users: [
-        //   { last: true, title: 'Jason Oner', avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg', },
-        //   { title: 'Travis Howard', avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg' },
-        //   { title: 'Ali Connors', avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg' },
-        //   { title: 'Cindy Baker', avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg' },
-        ],
+        users: [],
         city: '',
         cities: [],
         posts: [
@@ -320,19 +315,10 @@ export default {
                 })
             })
         },
-        // searchUser(input, cities) {
-        //     UserService.searchUser({input, cities}).then(response => {
-        //         response.data.users.forEach(user => {
-        //             console.log(user)
-        //             this.users.push(user)
-        //         })
-        //     })
-        // },
         searchUser(input, cities) {
             if(cities == ''){
                 UserService.searchUser({input}).then(response => {
                     response.data.users.forEach(user => {
-                        console.log(user)
                         this.users.push(user)
                     })
                 })
@@ -340,7 +326,6 @@ export default {
                 cities.forEach(city=>{
                     UserService.searchUserByCity({input, city}).then(response => {
                         response.data.users.forEach(user => {
-                            console.log(user)
                             this.users.push(user)
                         })
                     })
