@@ -190,11 +190,11 @@ export default {
                     city: this.city
                 }
             })
-            this.$swal(
-                'Great!',
-                `Your post has been added!`,
-                'success'
-            )
+            // this.$swal(
+            //     'Great!',
+            //     `Your user has been added!`,
+            //     'success'
+            // )
             this.$router.push({ name: 'login' })
         }
     }

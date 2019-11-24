@@ -185,7 +185,7 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
 import PostService from '@/services/PostService'
 import LikeService from '@/services/LikeService'
 import CommentService from '@/services/CommentService'

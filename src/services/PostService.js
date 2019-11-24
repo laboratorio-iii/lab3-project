@@ -18,8 +18,8 @@ export default {
     return api().post('post/search/category', params)
   },
 
-  getPost (params) {
-    return api().get('post/' + params.id)
+  getPostsByUser (params) {
+    return api().get('post/user/' + params)
   },
 
   deletePost (id) {

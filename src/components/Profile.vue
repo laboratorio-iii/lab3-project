@@ -5,36 +5,54 @@
                 <v-layout row wrap>
                     <v-flex xs4>
                         <v-avatar
-                            class="mx-auto my-2 d-block grey lighten-2"
+                            class="mx-auto my-5 d-block grey lighten-2"
                             size="100"
                         >
                             <img
-                            src="https://randomuser.me/api/portraits/men/78.jpg"
+                            :src="user_found.image"
                             >
                   
                         </v-avatar>
-                        <v-btn fab dark x-small :color="color_base" class="mx-2"
+                        <!-- <v-btn v-if="user_found._id == user._id" fab dark x-small :color="color_base" class="mx-2"
                             @click="onPickFile">
                                 <v-icon dark>camera_alt</v-icon>
-                        </v-btn>
+                        </v-btn> -->
             
                         <input type="file" style="display: none;" ref="fileInput">
                     </v-flex>
                     <v-divider vertical></v-divider>
                     <v-flex xs7>
                         <v-card-text class="text-xs-center">
-                            <h4 class="text--primary font-weight-light">Bruce Wayne</h4>
+                            <h4 class="text--primary font-weight-light">
+                                {{ user_found.firstname +" "+ user_found.lastname }}
+                            </h4>
                             
                             <v-divider></v-divider>
-                            <h6 class="gray--text">Se unió el 27/07/2019.</h6>
+                            <h6 class="gray--text">Se unió el {{ user_found.createdAt }}</h6>
                             <v-divider></v-divider>
-                            <p class="font-weight-light">Barquisimeto, Lara</p>
-                            <v-btn x-small class="font-weight-light">
-                                <v-icon dark left>done</v-icon>Seguir
-                            </v-btn>
-                            <v-btn fab dark x-small color="gray" class="mx-5" @click="dialog = true">
-                                    <v-icon dark>edit</v-icon>
-                            </v-btn>
+                            <p class="font-weight-light">{{ user_found.city.name +", "+ user_found.city.state.name}}</p>
+                            
+                            <template v-if="user_found._id == user._id">
+                                <v-btn fab dark x-small :color="color_base" class="mx-2"
+                                    @click="onPickFile">
+                                        <v-icon dark>camera_alt</v-icon>
+                                </v-btn>
+                                <v-btn small color="gray" class="mx-5" @click="dialog = true">
+                                        <v-icon dark>edit</v-icon>
+                                </v-btn>
+                            </template>
+
+                            <template v-else>
+                                <v-btn v-if="!user_found.followed" x-small block class="font-weight-light" @click="follow(user_found._id)">
+                                    <v-icon dark left>done</v-icon>Seguir
+                                </v-btn>
+
+                                <v-btn v-else x-small block class="font-weight-light white--text" :color="color_base" @click="follow(user_found._id)">
+                                    <v-icon dark left>done</v-icon>Seguido
+                                </v-btn>
+
+                            </template>
+
                         </v-card-text>
                     </v-flex>  
                 </v-layout>
@@ -81,6 +99,7 @@
                                             name="nombre"
                                             label="Nombre"
                                             id="nombre"
+                                            v-model="user_found.firstname"
                                         ></v-text-field>
                                     </v-flex>
 
@@ -89,6 +108,7 @@
                                             name="apellido"
                                             label="Apellidos"
                                             id="apellido"
+                                            v-model="user_found.lastname"
                                         ></v-text-field>
                                     </v-flex>
 
@@ -104,7 +124,6 @@
                                         >
                                             <template v-slot:activator="{ on }">
                                                 <v-text-field :color="color_base"
-                                                    v-model="date"
                                                     label="Fecha de nacimiento"
                                                     prepend-icon="event"
                                                     readonly
@@ -116,18 +135,19 @@
                                     </v-flex>
 
                                     <v-flex xs12 sm6 d-flex>
-                                        <v-select
-                                        :items="estados"
+                                        <v-select :color="color_base"
+                                        v-model="user_found.city.state.name"
+                                        :items="states"
                                         label="Estado"
-                                        :color="color_base"
+                                        @change="getCities(user_found.city.state.name)"
                                         ></v-select>
                                     </v-flex>
 
                                     <v-flex xs12 sm6 d-flex>
-                                        <v-select
-                                        :items="ciudades"
+                                        <v-select :color="color_base"
+                                        :model="user_found.city.name"
+                                        :items="cities"
                                         label="Ciudad"
-                                        :color="color_base"
                                         ></v-select>
                                     </v-flex>
                                     
@@ -149,7 +169,12 @@
 </template>
 
 <script>
-import {mapState, mapMutations} from 'vuex'
+import { mapState, mapMutations } from 'vuex'
+import UserService from '@/services/UserService'
+import StateService from '@/services/StateService'
+import CityService from '@/services/CityService'
+import FollowService from '@/services/FollowService'
+
 import Publicaciones from './Publicaciones'
 import Seguidores from './Seguidores'
 import Seguidos from './Seguidos'
@@ -161,6 +186,14 @@ export default {
         Seguidos,
     },
     data: () => ({
+        user_found: {
+            city: {
+                name: '',
+                state: {
+                    name: ''
+                }
+            }
+        },
         tab: null,
         dialog: false,
         show: false,
@@ -173,15 +206,17 @@ export default {
         items: [
             'Publicaciones', 'Seguidores', 'Seguidos',
         ],
-        estados: ['Lara', 'Zulia'],
-        ciudades: ['Barquisimeto', 'Maracaibo'],
+        states: [],
+        cities: []
     }),
     mounted() {
-        this.onNavBtn()
+        this.onNavBtn(),
+        this.getStates(),
+        this.getUser()
         // console.log(this.$route.params.user)
     },
     computed: {
-        ...mapState(['color_base']),
+        ...mapState(['color_base', 'user']),
         activeBtnValue: {
             get () {
                 return this.$store.state.activeBtn
@@ -196,9 +231,42 @@ export default {
         onNavBtn () {
             this.setActiveBtn()
         },
-         onPickFile() {
-             this.$refs.fileInput.click()
-         },
+        getUser(){
+            UserService.getUser(this.$route.params.user).then(response => {
+                this.user_found = response.data.user
+                FollowService.getFollower(response.data.user._id).then(r => {
+                    this.user_found.followed = r.data.followed
+                })
+            })
+        },
+        getStates () {
+            StateService.fetchStates().then(response=>{
+                response.data.states.forEach((state, index) => {
+                    this.states.push(state.name)
+                })
+            })
+        },
+        getCities (param) {
+            this.cities = []
+            CityService.fetchCitiesByState(param).then(response=>{
+                if(typeof response.data.cities === 'object'){
+                    this.cities.push(response.data.cities.name)
+                } else{
+                    response.data.cities.forEach((city, index) => {
+                        this.cities.push(city.name)
+                    })
+                }
+            })
+        },
+        onPickFile() {
+            this.$refs.fileInput.click()
+        },
+        follow(id) {
+            FollowService.follow({followed: id, follower: this.$store.state.user._id}).then(response => {
+                // console.log(response.data.result)
+            })
+            this.getUser()
+        }
     },
 }
 </script>

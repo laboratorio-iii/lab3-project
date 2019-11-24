@@ -49,16 +49,20 @@
                             </v-flex>
                         </v-layout>
                         <template v-for="(user, index) in users">
-                            <!-- <v-divider inset :key="index"></v-divider> -->
-                            <v-list-item :key="index" @click="debug">
+                            <v-list-item :key="index" @click="GoToProfile(user.username)">
                                 <v-list-item-icon>
-                                <v-btn x-small class="font-weight-light">
-                                    <v-icon dark left>done</v-icon>Seguir
-                                </v-btn>
+                                    <v-btn v-if="!user.followed" x-small block class="font-weight-light" @click="follow(user._id)">
+                                        <v-icon dark left>done</v-icon>Seguir
+                                    </v-btn>
+
+                                    <v-btn v-else x-small block class="font-weight-light white--text" :color="color_base" @click="follow(user._id)">
+                                        <v-icon dark left>done</v-icon>Seguido
+                                    </v-btn>
                                 </v-list-item-icon>
 
                                 <v-list-item-content>
-                                <v-list-item-title v-text="user.username" right></v-list-item-title>
+                                <v-list-item-title right>{{ user.firstname +" "+ user.lastname }}</v-list-item-title>
+                                <span class="grey--text caption" v-text="user.username"></span>
                                 </v-list-item-content>
 
                                 <v-list-item-avatar>
@@ -198,11 +202,6 @@
                                 <v-list three-line>
                                     <v-subheader>Comentarios</v-subheader>
                                     <template v-for="(comment, c_index) in comments">
-                                        <!-- <v-subheader
-                                        v-if="comment.header"
-                                        :key="comment.header"
-                                        v-text="comment.header"
-                                        ></v-subheader> -->
 
                                         <v-divider
                                         :key="comment.title"
@@ -261,6 +260,7 @@ import UserService from '@/services/UserService'
 import PostService from '@/services/PostService'
 import LikeService from '@/services/LikeService'
 import CommentService from '@/services/CommentService'
+import FollowService from '@/services/FollowService'
 import CityService from '@/services/CityService'
 import CategoryService from '@/services/CategoryService'
 
@@ -321,15 +321,25 @@ export default {
             this.users = []
             if(cities == ''){
                 UserService.searchUser({input}).then(response => {
-                    response.data.users.forEach(user => {
-                        this.users.push(user)
+                    response.data.users.forEach((user, index) => {
+                        if(user._id != this.$store.state.user._id){
+                            this.users.push(user)
+                            FollowService.getFollower(user._id).then(r => {
+                                this.users[index].followed = r.data.followed
+                            })
+                        }
                     })
                 })
             }else{
                 cities.forEach(city=>{
                     UserService.searchUserByCity({input, city}).then(response => {
-                        response.data.users.forEach(user => {
-                            this.users.push(user)
+                        response.data.users.forEach((user, index) => {
+                            if(user._id != this.$store.state.user._id){
+                                this.users.push(user)
+                                FollowService.getFollower(user._id).then(r => {
+                                    this.users[index].followed = r.data.followed
+                                })
+                            }
                         })
                     })
                 })
@@ -400,6 +410,14 @@ export default {
                 })
                 this.new_comment = ''
             }
+        },
+        GoToProfile(username){
+            this.$router.push({ name: 'profile', params: { user: username } })
+        },
+        follow(id) {
+            FollowService.follow({followed: id, follower: this.$store.state.user._id}).then(response => {
+                // console.log(response.data.result)
+            })
         }
     },
     created() {

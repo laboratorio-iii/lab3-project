@@ -22,7 +22,7 @@ export default {
   },
 
   getUser (params) {
-    return api().get('user/' + params.id)
+    return api().get('user/' + params)
   },
 
   deleteUser (id) {
