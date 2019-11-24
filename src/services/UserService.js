@@ -18,7 +18,7 @@ export default {
   },
 
   updateUser (params) {
-    return api().put('user/' + params.id, params)
+    return api().put('user/' + params._id, params)
   },
 
   getUser (params) {

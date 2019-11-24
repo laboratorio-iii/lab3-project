@@ -13,11 +13,7 @@
                             >
                   
                         </v-avatar>
-                        <!-- <v-btn v-if="user_found._id == user._id" fab dark x-small :color="color_base" class="mx-2"
-                            @click="onPickFile">
-                                <v-icon dark>camera_alt</v-icon>
-                        </v-btn> -->
-            
+
                         <input type="file" style="display: none;" ref="fileInput">
                     </v-flex>
                     <v-divider vertical></v-divider>
@@ -84,7 +80,7 @@
             </v-tabs-items>
             <template id="dialog">
                 <v-layout justify-center>
-                    <v-dialog v-model="dialog" max-width="600px">
+                    <v-dialog v-model="dialog" max-width="600px" @click:outside="getUser">
                     
                     <v-card>
                         <v-card-title>
@@ -124,6 +120,7 @@
                                         >
                                             <template v-slot:activator="{ on }">
                                                 <v-text-field :color="color_base"
+                                                    v-model="date"
                                                     label="Fecha de nacimiento"
                                                     prepend-icon="event"
                                                     readonly
@@ -134,10 +131,11 @@
                                         </v-menu>
                                     </v-flex>
 
-                                    <v-flex xs12 sm6 d-flex>
+                                    <!-- <v-flex xs12 sm6 d-flex>
                                         <v-select :color="color_base"
                                         v-model="user_found.city.state.name"
                                         :items="states"
+                                        menu-props="auto"
                                         label="Estado"
                                         @change="getCities(user_found.city.state.name)"
                                         ></v-select>
@@ -145,11 +143,12 @@
 
                                     <v-flex xs12 sm6 d-flex>
                                         <v-select :color="color_base"
-                                        :model="user_found.city.name"
+                                        v-model="user_found.city.name"
                                         :items="cities"
+                                        menu-props="auto"
                                         label="Ciudad"
                                         ></v-select>
-                                    </v-flex>
+                                    </v-flex> -->
                                     
                                 </v-layout>
                             </v-form>
@@ -157,8 +156,8 @@
                         </v-card-text>
                         <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn :color="color_base" text @click="dialog = false">Salir</v-btn>
-                        <v-btn :color="color_base" text @click="dialog = false">Guardar datos</v-btn>
+                        <v-btn :color="color_base" text @click="resetUser">Salir</v-btn>
+                        <v-btn :color="color_base" text @click="updateUser">Guardar datos</v-btn>
                         </v-card-actions>
                     </v-card>
                     </v-dialog>
@@ -264,8 +263,18 @@ export default {
         follow(id) {
             FollowService.follow({followed: id, follower: this.$store.state.user._id}).then(response => {
                 // console.log(response.data.result)
+                this.getUser()
             })
+        },
+        resetUser() {
+            this.dialog = false
             this.getUser()
+        },
+        updateUser() {
+            UserService.updateUser(this.user_found).then(response => {
+                this.dialog = false
+                this.getUser()
+            })
         }
     },
 }
