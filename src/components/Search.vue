@@ -420,10 +420,10 @@ export default {
             })
         }
     },
-    created() {
-        this.posts.forEach(element => {
-            element.liked ? element.color = this.likedColor : element.color = 'none'
-        });
-    },
+    // created() {
+    //     this.posts.forEach(element => {
+    //         element.liked ? element.color = this.likedColor : element.color = 'none'
+    //     });
+    // },
 }
 </script>

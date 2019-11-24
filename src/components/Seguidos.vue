@@ -2,22 +2,28 @@
     <v-layout column>
         <v-list>
             <template v-for="(item, index) in items">
-                <v-divider v-if="!item.last" inset :key="index"></v-divider>
-                <v-list-item :key="item.title" @click="debug">
-                    <v-list-item-icon>
-                    <v-btn x-small class="font-weight-light white--text" :color="color_base">
-                        <v-icon left>done</v-icon>Seguido
-                    </v-btn>
+                
+                <v-list-item :key="item.followed.username">
+                    <v-list-item-icon v-if="item.followed._id != user._id">
+                        <v-btn v-if="!item.followed.followed" x-small class="font-weight-light" @click="follow(item.followed._id)">
+                            <v-icon dark left>done</v-icon>Seguir
+                        </v-btn>
+                        <v-btn v-else x-small block class="font-weight-light white--text" :color="color_base" @click="follow(item.followed._id)">
+                            <v-icon dark left>done</v-icon>Seguido
+                        </v-btn>
                     </v-list-item-icon>
 
                     <v-list-item-content>
-                    <v-list-item-title v-text="item.title" right></v-list-item-title>
+                        <v-list-item-title right>{{ item.followed.firstname +" "+ item.followed.lastname }}</v-list-item-title>
+                        <span class="grey--text caption" v-text="item.followed.username"></span>
                     </v-list-item-content>
 
                     <v-list-item-avatar>
-                    <v-img :src="item.avatar"></v-img>
+                    <v-img :src="item.followed.image"></v-img>
                     </v-list-item-avatar>
                 </v-list-item>
+
+                <v-divider inset :key="index"></v-divider>
 
             </template>
         </v-list>
@@ -25,23 +31,41 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
+import FollowService from '@/services/FollowService'
 
 export default {
     data: () => ({
-        items: [
-          { last: true, title: 'Jason Oner', avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg' },
-          { title: 'Travis Howard', avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg' },
-          { title: 'Ali Connors', avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg' },
-          { title: 'Cindy Baker', avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg' },
-        ],
+        items: [],
     }),
+    mounted(){
+        this.getFolloweds()
+    },
     computed: {
-        ...mapState(['color_base'])
+        ...mapState(['color_base', 'user']),
     },
     methods: {
         debug() {
             console.log(event.target)
+        },
+        getFolloweds() {
+            this.items = []
+            FollowService.getFolloweds(this.$route.params.user).then(response => {
+                response.data.followeds.forEach((followed, index) => {
+                    this.items.push(followed)
+                    FollowService.getFollower(followed.followed._id).then(r => {
+                        this.items[index].followed.followed = r.data.followed
+                    })
+                })
+            })
+        },
+        GoToProfile(username){
+            this.$router.push({ name: 'profile', params: { user: username } })
+        },
+        follow(id) {
+            FollowService.follow({followed: id, follower: this.$store.state.user._id}).then(response => {
+                this.getFolloweds()
+            })
         }
     } 
 }

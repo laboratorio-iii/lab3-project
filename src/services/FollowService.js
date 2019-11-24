@@ -12,6 +12,10 @@ export default {
 
   getFollowers(params) {
       return api().get('follows/followers/' + params)
+  },
+
+  getFolloweds(params) {
+    return api().get('follows/followeds/' + params)
   }
 
 }
