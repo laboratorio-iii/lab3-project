@@ -118,12 +118,21 @@
                                             text-color="white"
                                             >
                                             <v-icon left>mdi-label</v-icon>
-                                            </v-chip></span><br>
+                                            </v-chip></span>
+                                        <span v-if="post.shared" class="float-right mr-3"><v-chip
+                                            color="blue"
+                                            label
+                                            small
+                                            text-color="white"
+                                            >{{"Autor: " + post.author.firstname}}
+                                            <v-icon left>mdi-label</v-icon>
+                                        </v-chip></span><br>
                                         <span class="text--primary" v-text="post.description"></span>
                                     </v-card-text>
 
                                     <v-card-actions>
                                         <div class="grey--text ml-1 caption">
+                                            <v-icon v-if="post.shared">fa fa-retweet</v-icon>
                                             {{ post.user.firstname +" "+ post.user.lastname +", "}}
                                             {{ post.createdAt | formatAgo }}.
                                         </div>
@@ -139,8 +148,8 @@
                                         <v-icon>fa fa-comment</v-icon>
                                     </v-btn>
                                     
-                                    <v-btn icon @click="msg_dialog = true">
-                                        <v-icon>fa fa-paper-plane</v-icon>
+                                    <v-btn v-if="post.user._id != user._id" icon @click="sharePost(post)">
+                                        <v-icon>fa fa-share-alt</v-icon>
                                     </v-btn>
                                     </v-card-actions>
                                 </v-card>
@@ -293,7 +302,7 @@ export default {
         this.getCategories()
     },
     computed: {
-        ...mapState(['color_base'])
+        ...mapState(['color_base','user'])
     },
     methods: {
         debug() {
@@ -422,6 +431,21 @@ export default {
         follow(id) {
             FollowService.follow({followed: id, follower: this.$store.state.user._id}).then(response => {
                 // console.log(response.data.result)
+            })
+        },
+        sharePost(post) {
+            event.preventDefault()
+            PostService.addPost({
+                user: this.$store.state.user._id,
+                title: post.title,
+                description: post.description,
+                category: post.category.name,
+                image: post.image,
+                price: post.price,
+                shared: true,
+                author: post.user._id
+            }).then(response => {
+                this.$router.push({ name: 'home' })
             })
         }
     },
