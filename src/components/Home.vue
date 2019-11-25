@@ -4,7 +4,7 @@
 
             <template>
                 <v-row justify="center">
-                    <v-dialog v-model="dialog_categories" persistent max-width="290">
+                    <v-dialog v-model="dialog_categories" persistent max-width="320">
                     <template v-slot:activator="{ on }">
                         <v-btn :color="color_base" dark v-on="on">Ver categorías</v-btn>
                     </template>
@@ -14,30 +14,30 @@
 
                     <template v-for="(category, index) in categories">
                         <v-list-item :key="index">
-                                <v-list-item-icon>
-                                    <v-btn v-if="!category.followed" x-small block class="font-weight-light" @click="followCategory(category._id)">
-                                        <v-icon dark left>done</v-icon>Seguir
-                                    </v-btn>
-
-                                    <v-btn v-else x-small block class="font-weight-light white--text" :color="color_base" @click="followCategory(category._id)">
-                                        <v-icon dark left>done</v-icon>Seguido
-                                    </v-btn>
-                                </v-list-item-icon>
-
-                                <v-list-item-content>
+                            <v-list-item-content>
                                 <v-list-item-title right>{{ category.name }}</v-list-item-title>
-                                </v-list-item-content>
+                            </v-list-item-content>
+                            <v-list-item-icon>
+                                <v-btn v-if="!category.followed" x-small class="font-weight-light" @click="followCategory(category._id)">
+                                    <v-icon dark left>done</v-icon>Seguir
+                                </v-btn>
 
-                                <v-list-item-avatar>
-                                <!-- <v-img :src="user.image"></v-img> -->
-                                </v-list-item-avatar>
-                            </v-list-item>
+                                <v-btn v-else x-small class="font-weight-light white--text" :color="color_base" @click="followCategory(category._id)">
+                                    <v-icon dark left>done</v-icon>Seguido
+                                </v-btn>
+                            </v-list-item-icon>
+
+                            
+
+                            <v-list-item-avatar>
+                            </v-list-item-avatar>
+                        </v-list-item>
                     </template>
 
                         
                         <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="orange darken-1" text @click="dialog_categories = false">Aceptar</v-btn>
+                        <v-btn color="orange darken-1" text @click="refreshPosts">Aceptar</v-btn>
                         </v-card-actions>
                     </v-card>
                     </v-dialog>
@@ -235,6 +235,7 @@ import LikeService from '@/services/LikeService'
 import CommentService from '@/services/CommentService'
 import CategoryService from '@/services/CategoryService'
 import Category_FollowsService from '@/services/Category_FollowsService'
+import FollowService from '@/services/FollowService'
 
 export default {
     data: () => ({
@@ -268,11 +269,18 @@ export default {
             // console.log(response.data.result)
         },
         getPosts () {
+            this.posts = []
             PostService.fetchPosts().then(response => {
-                this.posts = response.data.posts
                 response.data.posts.forEach((post, index) => {
-                    LikeService.getLikesByUser(post._id).then(r => {
-                        this.posts[index].liked = r.data.liked
+                    FollowService.getFollower(post.user._id).then(res => {
+                        Category_FollowsService.getFollower(post.category._id).then(resp=> {
+                            if(res.data.followed || post.user._id == this.user._id || resp.data.followed){
+                                LikeService.getLikesByUser(post._id).then(r => {
+                                    post.liked = r.data.liked
+                                    this.posts.push(post)
+                                })
+                            }
+                        })
                     })
                 })
             })
@@ -325,6 +333,10 @@ export default {
                 this.categories = []
                 this.getCategories()
             })
+        },
+        refreshPosts() {
+            this.dialog_categories = false
+            this.getPosts()
         }
     },
     // created() {
