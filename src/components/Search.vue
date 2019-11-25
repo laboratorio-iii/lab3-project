@@ -320,20 +320,9 @@ export default {
         },
         searchUser(input, cities) {
             this.users = []
-            if(cities == ''){
-                UserService.searchUser({input}).then(response => {
-                    response.data.users.forEach((user, index) => {
-                        if(user._id != this.$store.state.user._id){
-                            this.users.push(user)
-                            FollowService.getFollower(user._id).then(r => {
-                                this.users[index].followed = r.data.followed
-                            })
-                        }
-                    })
-                })
-            }else{
-                cities.forEach(city=>{
-                    UserService.searchUserByCity({input, city}).then(response => {
+            if(this.search != ''){
+                if(cities == ''){
+                    UserService.searchUser({input}).then(response => {
                         response.data.users.forEach((user, index) => {
                             if(user._id != this.$store.state.user._id){
                                 this.users.push(user)
@@ -343,23 +332,27 @@ export default {
                             }
                         })
                     })
-                })
+                }else{
+                    cities.forEach(city=>{
+                        UserService.searchUserByCity({input, city}).then(response => {
+                            response.data.users.forEach((user, index) => {
+                                if(user._id != this.$store.state.user._id){
+                                    this.users.push(user)
+                                    FollowService.getFollower(user._id).then(r => {
+                                        this.users[index].followed = r.data.followed
+                                    })
+                                }
+                            })
+                        })
+                    })
+                }
             }
         },
         searchPost(input, categories) {
             this.posts = []
-            if(categories == ''){
-                PostService.searchPost({input}).then(response => {
-                    response.data.posts.forEach((post, index) => {
-                        this.posts.push(post)
-                        LikeService.getLikesByUser(post._id).then(r => {
-                            this.posts[index].liked = r.data.liked
-                        })
-                    })
-                })
-            }else{
-                categories.forEach(category=>{
-                    PostService.searchPostByCategory({input, category}).then(response => {
+            if(this.search != ''){
+                if(categories == ''){
+                    PostService.searchPost({input}).then(response => {
                         response.data.posts.forEach((post, index) => {
                             this.posts.push(post)
                             LikeService.getLikesByUser(post._id).then(r => {
@@ -367,7 +360,18 @@ export default {
                             })
                         })
                     })
-                })
+                }else{
+                    categories.forEach(category=>{
+                        PostService.searchPostByCategory({input, category}).then(response => {
+                            response.data.posts.forEach((post, index) => {
+                                this.posts.push(post)
+                                LikeService.getLikesByUser(post._id).then(r => {
+                                    this.posts[index].liked = r.data.liked
+                                })
+                            })
+                        })
+                    })
+                }
             }
         },
         buscar() {

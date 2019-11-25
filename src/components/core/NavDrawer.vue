@@ -91,7 +91,7 @@ export default {
     data: () => ({
         items: [
           { title: 'Nueva publicación', icon: 'add_circle', route: 'publication-create', admin: false, params: false },
-          { title: 'Mi perfil', icon: 'account_circle', route: 'profile', admin: false, params: true },
+        //   { title: 'Mi perfil', icon: 'account_circle', route: 'profile', admin: false, params: true },
           { title: 'Acceso', icon: 'lock', route: 'settings', admin: false, params: false },
           { title: 'Mis reacciones', icon: 'favorite', route: 'likes' , admin: false, params: false },
           { title: 'Gestionar', icon: 'pan_tool', route: '', admin: true, params: false },
