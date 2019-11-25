@@ -23,12 +23,26 @@
                     </v-img>
 
                     <v-card-text>Precio: $
-                        <span v-text="post.price"></span><br>
+                        <span v-text="post.price"></span>
+                        <span class="float-right"><v-chip
+                            :color="color_base"
+                            label
+                            small
+                            v-text="post.category.name"
+                            text-color="white"
+                            >
+                            <v-icon left>mdi-label</v-icon>
+                            </v-chip></span><br>
                         <span class="text--primary" v-text="post.description"></span>
                     </v-card-text>
 
                     <v-card-actions>
+                        <div class="grey--text ml-1 caption">
+                            {{ post.user.firstname +" "+ post.user.lastname +", "}}
+                            {{ post.createdAt | formatAgo }}.
+                        </div>
                     <v-spacer></v-spacer>
+                    
 
                     <v-btn icon :color="post.liked ? likedColor : 'none'"
                     @click="like(post._id)">
@@ -172,7 +186,7 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
 import PostService from '@/services/PostService'
 import LikeService from '@/services/LikeService'
 import CommentService from '@/services/CommentService'
@@ -184,7 +198,6 @@ export default {
           id: '',
           index: ''
       },
-      likes: [],
       comments: [],
       new_comment: '',
       msg_dialog: false,

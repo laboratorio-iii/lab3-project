@@ -15,13 +15,14 @@
 
                                     <v-flex>
                                         <v-text-field :color="color_base"
-                                            name="email"
-                                            label="Correo electrónico"
-                                            id="email"
+                                            name="username"
+                                            label="Usuario"
+                                            id="username"
+                                            v-model="user.username"
                                         ></v-text-field>
                                     </v-flex>
 
-                                    <v-flex>
+                                    <!-- <v-flex>
                                         <v-text-field :color="color_base"
                                             :append-icon="show ? 'visibility' : 'visibility_off'"
                                             :rules="[rules.required]"
@@ -30,6 +31,7 @@
                                             label="Contraseña"
                                             @click:append="show = !show"
                                             id="rpass"
+                                            v-model="user.password"
                                         ></v-text-field>
                                     </v-flex>
                                     <v-flex>
@@ -41,10 +43,10 @@
                                             label="Repita su contraseña"
                                             @click:append="show = !show"
                                         ></v-text-field>
-                                    </v-flex>
+                                    </v-flex> -->
                                 </v-layout>
                                 
-                                <v-btn type="submit" block class="ma-a" outlined :color="color_base">
+                                <v-btn block class="ma-a" outlined :color="color_base" @click="updateUser">
                                     <v-icon left>edit</v-icon>Guardar cambios
                                 </v-btn>
                             </v-form>
@@ -59,6 +61,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
+import UserService from '@/services/UserService'
 
 export default {
     data: () => ({
@@ -72,8 +75,8 @@ export default {
         this.onNavBtn()
     },
     computed: {
-    ...mapState(['color_base']),
-    activeBtnValue: {
+        ...mapState(['color_base', 'user']),
+        activeBtnValue: {
             get () {
                 return this.$store.state.activeBtn
             },
@@ -90,6 +93,10 @@ export default {
          onPickFile() {
              this.$refs.fileInput.click()
          },
+         updateUser() {
+             event.preventDefault()
+            UserService.updateUserSettings(this.user)
+        }
     },
 }
 </script>

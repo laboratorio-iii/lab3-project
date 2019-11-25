@@ -2,9 +2,6 @@ import api from '@/services/api'
 
 export default {
 
-  // async fetchPosts (params) {
-  //     return api().get('post/' + params)
-  // },
   async fetchPosts () {
     return api().get('post')
   },
@@ -13,8 +10,16 @@ export default {
     return api().post('post', params)
   },
 
-  getPost (params) {
-    return api().get('post/' + params.id)
+  searchPost(params) {
+    return api().post('post/search', params)
+  },
+
+  searchPostByCategory(params) {
+    return api().post('post/search/category', params)
+  },
+
+  getPostsByUser (params) {
+    return api().get('post/user/' + params)
   },
 
   deletePost (id) {

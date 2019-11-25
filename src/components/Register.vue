@@ -80,8 +80,8 @@
                                     <v-flex>
                                         <v-text-field :color="color_base"
                                             
-                                            label="Correo electrónico"
-                                            id="email"
+                                            label="Usuario"
+                                            id="username"
                                             v-model="username"
                                         ></v-text-field>
                                     </v-flex>
@@ -190,11 +190,11 @@ export default {
                     city: this.city
                 }
             })
-            this.$swal(
-                'Great!',
-                `Your post has been added!`,
-                'success'
-            )
+            // this.$swal(
+            //     'Great!',
+            //     `Your user has been added!`,
+            //     'success'
+            // )
             this.$router.push({ name: 'login' })
         }
     }

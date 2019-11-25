@@ -9,7 +9,7 @@
 
                 <v-list-item-content>
                     <v-list-item-title v-text="user.username"></v-list-item-title>
-                    <v-list-item-subtitle v-text="user.rol == 'Regular' ? 'Negociante' : ''"></v-list-item-subtitle>
+                    <v-list-item-subtitle v-text="user.role.name == 'Regular' ? 'Negociante' : ''"></v-list-item-subtitle>
                 </v-list-item-content>
                 </v-list-item>
             </template>
