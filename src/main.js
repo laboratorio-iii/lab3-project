@@ -3,7 +3,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify';
-import VueSweetalert2 from 'vue-sweetalert2';
+import moment from 'moment'
+// import VueSweetalert2 from 'vue-sweetalert2';
 import '@babel/polyfill'
 import 'roboto-fontface/css/roboto/roboto-fontface.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
@@ -12,7 +13,20 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
 // sync(store, router)
 
-Vue.use(VueSweetalert2)
+moment.locale('es')
+Vue.filter('formatDate', function(value) {
+  if (value) {
+    return moment(String(value)).format('LL')
+  }
+});
+
+Vue.filter('formatAgo', function(value) {
+  if (value) {
+    return moment(String(value)).fromNow()
+  }
+});
+
+// Vue.use(VueSweetalert2)
 Vue.config.productionTip = false
 
 new Vue({

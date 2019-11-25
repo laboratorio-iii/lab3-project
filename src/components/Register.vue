@@ -80,8 +80,8 @@
                                     <v-flex>
                                         <v-text-field :color="color_base"
                                             
-                                            label="Correo electrónico"
-                                            id="email"
+                                            label="Usuario"
+                                            id="username"
                                             v-model="username"
                                         ></v-text-field>
                                     </v-flex>

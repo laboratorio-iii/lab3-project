@@ -24,7 +24,7 @@
                             </h4>
                             
                             <v-divider></v-divider>
-                            <h6 class="gray--text">Se unió el {{ user_found.createdAt }}</h6>
+                            <h6 class="gray--text">Se unió el  {{ user_found.createdAt | formatDate}}.</h6>
                             <v-divider></v-divider>
                             <p class="font-weight-light">{{ user_found.city.name +", "+ user_found.city.state.name}}</p>
                             
@@ -108,7 +108,7 @@
                                         ></v-text-field>
                                     </v-flex>
 
-                                    <v-flex>
+                                    <!-- <v-flex>
                                         <v-menu
                                             v-model="menu"
                                             :close-on-content-click="false"
@@ -120,16 +120,16 @@
                                         >
                                             <template v-slot:activator="{ on }">
                                                 <v-text-field :color="color_base"
-                                                    v-model="date"
+                                                    v-model="new_date"
                                                     label="Fecha de nacimiento"
                                                     prepend-icon="event"
                                                     readonly
                                                     v-on="on"
                                                 ></v-text-field>
                                             </template>
-                                            <v-date-picker :color="color_base" v-model="date" @input="menu = false"></v-date-picker>
+                                            <v-date-picker :color="color_base" v-model="new_date" @input="menu = false"></v-date-picker>
                                         </v-menu>
-                                    </v-flex>
+                                    </v-flex> -->
 
                                     <!-- <v-flex xs12 sm6 d-flex>
                                         <v-select :color="color_base"
@@ -169,6 +169,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
+import moment from 'moment'
 import UserService from '@/services/UserService'
 import StateService from '@/services/StateService'
 import CityService from '@/services/CityService'
@@ -193,6 +194,7 @@ export default {
                 }
             }
         },
+        new_date: '',
         tab: null,
         dialog: false,
         show: false,

@@ -21,6 +21,10 @@ export default {
     return api().put('user/' + params._id, params)
   },
 
+  updateUserSettings (params) {
+    return api().put('user/settings/' + params._id, params)
+  },
+
   getUser (params) {
     return api().get('user/' + params)
   },

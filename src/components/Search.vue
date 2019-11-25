@@ -124,7 +124,8 @@
 
                                     <v-card-actions>
                                         <div class="grey--text ml-1 caption">
-                                            {{ post.user.firstname +" "+ post.user.lastname +", "+ post.createdAt}}
+                                            {{ post.user.firstname +" "+ post.user.lastname +", "}}
+                                            {{ post.createdAt | formatAgo }}.
                                         </div>
                                     <v-spacer></v-spacer>
                                     
